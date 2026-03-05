@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FOR YOU ARK | BİLİŞSEL KOVAN (EXPERT VAULT)</title>
+    <style>
+        /* ========================================================= */
+        /* 🏰 NASA & BITCOIN STANDARTLARINDA İHTİŞAMLI CSS           */
+        /* ========================================================= */
+        :root { 
+            --gold: #d4af37; --gold-glow: rgba(212, 175, 55, 0.9); 
+            --dark-box: rgba(5, 6, 8, 0.98); --white-border: #ffffff;
+            --ai-blue: #4a90e2; --alert-red: #ff0000; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { height: 100%; font-family: 'Garamond', serif; background: #000; color: white; overflow: hidden; }
+
+        /* 🌊 CANLI OKYANUS ARKA PLAN */
+        #bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -100; filter: brightness(0.4) contrast(1.2); }
+        .vault-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, transparent 10%, #000 100%); z-index: -99; }
+        .living-frame { position: fixed; top: 12px; left: 12px; right: 12px; bottom: 12px; border: 2px solid var(--gold); pointer-events: none; z-index: 2000; box-shadow: 0 0 50px rgba(212, 175, 55, 0.3), inset 0 0 50px rgba(0,0,0,1); }
+
+        .main-container { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; z-index: 100; padding: 30px 50px; }
+
+        /* 👑 8 DİL DESTEKLİ HEADER */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-shrink: 0; }
+        .logo-group { display: flex; align-items: center; gap: 25px; }
+        .logo-small { width: 75px; border: 2px solid var(--gold); border-radius: 50%; padding: 10px; background: rgba(0,0,0,0.9); box-shadow: 0 0 30px var(--gold-glow); cursor: pointer; transition: 0.5s; }
+        .mode-badge { border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; font-size: 0.7rem; border-radius: 30px; letter-spacing: 4px; background: rgba(212,175,55,0.15); box-shadow: 0 0 15px var(--gold-glow); }
+
+        .header-controls { display: flex; align-items: center; gap: 25px; z-index: 5000; }
+        .lang-trigger { color: var(--gold); letter-spacing: 3px; font-size: 0.9rem; cursor: pointer; border-bottom: 2px solid var(--gold); padding-bottom: 5px; position: relative; }
+        .lang-list { display: none; position: absolute; top: 35px; right: 0; background: var(--dark-box); padding: 15px; border: 1px solid var(--gold); width: 150px; z-index: 10000; box-shadow: 0 0 50px #000; }
+        .lang-trigger:hover .lang-list { display: block; }
+        .lang-list span { display: block; color: #888; margin-bottom: 10px; font-size: 0.8rem; transition: 0.3s; }
+        .lang-list span:hover { color: var(--gold); transform: translateX(-5px); }
+
+        /* 🎤 ARA-BUL-YÖNET (SESLİ KOMUT & AI AKTİF) */
+        .search-container { width: 100%; max-width: 900px; margin: 0 auto 15px auto; position: relative; flex-shrink: 0; }
+        .search-input { width: 100%; background: rgba(0,0,0,0.8); border: 1px solid var(--gold); border-radius: 40px; padding: 18px 140px 18px 35px; color: #fff; font-family: 'Garamond', serif; font-size: 1.1rem; letter-spacing: 2px; outline: none; transition: 0.5s; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .search-tools { position: absolute; right: 30px; top: 50%; transform: translateY(-50%); display: flex; gap: 20px; align-items: center; }
+        .tool-icon { color: var(--gold); font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
+        .tool-icon:hover { transform: scale(1.2); text-shadow: 0 0 15px var(--gold); }
+
+        /* 🐝 ARI KOVANI (HEX GRID) - ZERO GAP & SÜRÜKLE BIRAK */
+        .hive-scroll-area { flex-grow: 1; overflow-y: auto; padding: 20px 0; scrollbar-width: none; }
+        .hex-grid { display: flex; flex-wrap: wrap; justify-content: center; max-width: 1400px; margin: 0 auto; gap: 10px; }
+        
+        .hex-outer { 
+            width: 230px; height: 264px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background: var(--gold); margin: -25px 0; display: flex; align-items: center; justify-content: center;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: grab; position: relative; z-index: 1;
+        }
+        .hex-outer:hover { transform: scale(1.1) rotate(2deg); z-index: 100; background: #fff; box-shadow: 0 0 50px var(--gold); }
+        .hex-outer.dragging { opacity: 0.3; }
+
+        .hex-inner {
+            width: 226px; height: 260px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background: var(--dark-box); display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 30px; text-align: center; pointer-events: none; transition: 0.4s;
+        }
+        .hex-outer:hover .hex-inner { background: rgba(0,0,0,1); }
+
+        /* 🛠️ KALEM (DÜZELTME) VE BELGE AKSİYONLARI */
+        .hex-actions { position: absolute; top: 45px; right: 45px; display: flex; flex-direction: column; gap: 10px; opacity: 0; transition: 0.3s; pointer-events: auto; }
+        .hex-outer:hover .hex-actions { opacity: 1; }
+        .h-btn { background: rgba(0,0,0,0.9); border: 1px solid var(--gold); color: var(--gold); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; transition: 0.3s; }
+        .h-btn:hover { background: var(--gold); color: #000; transform: scale(1.2); }
+
+        .hex-pic { font-size: 2.5rem; margin-bottom: 10px; pointer-events: auto; cursor: pointer; filter: drop-shadow(0 0 10px var(--gold)); }
+        .hex-title-group { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; pointer-events: auto; }
+        .hex-title { color: var(--gold); font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; }
+        .edit-pen { font-size: 0.8rem; color: #666; cursor: pointer; transition: 0.3s; }
+        .edit-pen:hover { color: #fff; transform: rotate(15deg); }
+        .hex-desc { color: #aaa; font-size: 0.75rem; line-height: 1.5; letter-spacing: 1px; }
+
+        /* 🚨 ACİL DURUM BUTONU (PANIC) */
+        .panic-btn { position: fixed; bottom: 40px; left: 50px; width: 85px; height: 85px; background: #600; border: 3px solid var(--alert-red); border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.75rem; font-weight: bold; cursor: pointer; z-index: 5000; box-shadow: 0 0 15px #f00; animation: pulseRed 2s infinite; }
+        @keyframes pulseRed { 0% { transform: scale(1); box-shadow: 0 0 15px #f00; } 50% { transform: scale(1.1); box-shadow: 0 0 45px #f00; } 100% { transform: scale(1); box-shadow: 0 0 15px #f00; } }
+
+        /* 🔐 VIP AUTH MODAL & 👁️ GÖZ BUTONU */
+        .auth-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.98); backdrop-filter: blur(25px); z-index: 100000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.6s; }
+        .auth-modal.active { opacity: 1; pointer-events: auto; }
+        .auth-box { border: 1px solid var(--gold); padding: 50px; text-align: center; border-radius: 15px; background: #010203; width: 480px; box-shadow: 0 0 100px rgba(212, 175, 55, 0.3); position: relative; }
+        
+        .panel-wrapper { position: relative; width: 100%; height: 350px; overflow: hidden; }
+        .auth-panel { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 10px; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transform: translateX(50px); transition: 0.5s; }
+        .auth-panel.active { opacity: 1; pointer-events: auto; transform: translateX(0); }
+
+        .input-group { margin-bottom: 25px; text-align: left; position: relative; }
+        .input-group label { display: block; font-size: 0.75rem; color: #888; letter-spacing: 2px; margin-bottom: 8px; text-transform: uppercase; }
+        .input-group input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #444; color: #fff; padding: 12px 45px 12px 0; font-size: 1.1rem; outline: none; transition: 0.3s; }
+        .input-group input:focus { border-color: var(--gold); }
+        .toggle-password { position: absolute; right: 5px; bottom: 12px; cursor: pointer; color: var(--gold); font-size: 1.2rem; transition: 0.3s; z-index: 10; }
+
+        .btn-action { width: 100%; background: var(--gold); color: #000; border: none; padding: 15px; font-weight: bold; letter-spacing: 4px; cursor: pointer; transition: 0.3s; margin-top: 15px; text-transform: uppercase; }
+        .btn-action:hover { background: #fff; box-shadow: 0 0 30px var(--gold); }
+
+        .fp-trigger { position: fixed; bottom: 40px; right: 50px; width: 85px; height: 85px; border: 2px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5000; background: rgba(0,0,0,0.8); transition: 0.5s; box-shadow: 0 0 30px var(--gold-glow); }
+        .fp-trigger:hover { background: var(--gold); color: #000; transform: scale(1.1); }
+
+        .kule-bar { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); width: 55%; background: rgba(0,0,0,0.95); border: 1px solid var(--gold); padding: 15px 40px; border-radius: 50px; display: flex; align-items: center; justify-content: space-between; z-index: 4000; backdrop-filter: blur(15px); }
+    </style>
+</head>
+<body>
+
+    <video autoplay muted loop playsinline id="bg-video"><source src="https://videos.pexels.com/video-files/853889/853889-hd_1920_1080_25fps.mp4" type="video/mp4"></video>
+    <div class="vault-overlay"></div>
+    <div class="living-frame"></div>
+
+    <div class="main-container">
+        <header>
+            <div class="logo-group">
+                <img src="images/foryou-logo.png" class="logo-small" onclick="window.location.href='index.html'">
+                <div>
+                    <h2 style="color:var(--gold); letter-spacing: 8px;">SOVEREIGN VAULT</h2>
+                    <div class="mode-badge" id="mode-badge">DEMO: SANAL ZİYARETÇİ MODU</div>
+                </div>
+            </div>
+            <div class="header-controls">
+                <div class="lang-trigger">TR
+                    <div class="lang-list">
+                        <span>TURKISH</span><span>ENGLISH</span><span>DEUTSCH</span><span>FRANÇAIS</span><span>ESPAÑOL</span><span>РУССКИЙ</span><span>العربية</span><span>中文</span>
+                    </div>
+                </div>
+                <button style="background:none; border:1px solid #f00; color:#f00; padding:10px 20px; cursor:pointer; letter-spacing:2px; font-size:0.7rem;" onclick="secureExit()">GÜVENLİ ÇIKIŞ</button>
+            </div>
+        </header>
+
+        <div class="search-container">
+            <input type="text" class="search-input" id="search-input" placeholder="Sesle komut veya belge ara...">
+            <div class="search-tools">
+                <span class="tool-icon" onclick="startVoice()">🎤</span>
+                <span class="tool-icon" onclick="alert('Belge tarama (Kamera) aktif...')">📷</span>
+            </div>
+        </div>
+
+        <div class="hive-scroll-area">
+            <div class="hex-grid" id="hive-grid">
+                </div>
+        </div>
+    </div>
+
+    <div class="panic-btn" onclick="panicProtocol()">ACİL<br>DURUM</div>
+
+    <div class="auth-modal" id="auth-modal">
+        <div class="auth-box">
+            <span style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.8rem; color:#888;" onclick="closeAuth()">×</span>
+            <h2 style="color:var(--gold); letter-spacing: 5px; margin-bottom: 30px;">SOVEREIGN ONAYI</h2>
+            
+            <div class="panel-wrapper">
+                <div class="auth-panel active" id="panel-login">
+                    <div class="input-group">
+                        <label>Kimlik / Protokol No</label>
+                        <input type="text" id="vip-id" autocomplete="off" placeholder="VIP-777-ARK">
+                    </div>
+                    <div class="input-group">
+                        <label>Erişim Şifresi</label>
+                        <input type="password" id="vip-pass" placeholder="••••">
+                        <span class="toggle-password" onclick="togglePass('vip-pass', this)">👁️</span>
+                    </div>
+                    <button class="btn-action" onclick="verifyAccess()">MÜHRÜ AÇ</button>
+                    <div style="margin-top: 25px; display:flex; justify-content: space-between;">
+                        <span style="color:#666; font-size:0.75rem; cursor:pointer; text-decoration:underline;" onclick="switchPanel('panel-forgot')">Şifremi Unuttum</span>
+                        <span style="color:#666; font-size:0.75rem; cursor:pointer; text-decoration:underline;" onclick="switchPanel('panel-register')">Şifre Oluştur</span>
+                    </div>
+                </div>
+
+                <div class="auth-panel" id="panel-register">
+                    <div class="input-group"><label>Kayıtlı E-Posta / Tel</label><input type="text" placeholder="protokol@foryou.com"></div>
+                    <div class="input-group">
+                        <label>Yeni Şifre Belirleyin</label>
+                        <input type="password" id="reg-pass" placeholder="••••">
+                        <span class="toggle-password" onclick="togglePass('reg-pass', this)">👁️</span>
+                    </div>
+                    <button class="btn-action" onclick="alert('Kayıt talebi Karargah\'a iletildi.'); switchPanel('panel-login');">ONAYLA</button>
+                    <button style="background:none; border:none; color:#888; margin-top:15px; cursor:pointer;" onclick="switchPanel('panel-login')">Geri Dön</button>
+                </div>
+
+                <div class="auth-panel" id="panel-forgot">
+                    <p style="color:#888; font-size:0.8rem; margin-bottom:20px;">Kayıtlı adresinize tek kullanımlık güvenlik anahtarı gönderilecektir.</p>
+                    <div class="input-group"><label>E-Posta Adresi</label><input type="email" placeholder="protokol@foryou.com"></div>
+                    <button class="btn-action" onclick="alert('Güvenlik anahtarı iletildi.'); switchPanel('panel-login');">ANAHTAR GÖNDER</button>
+                    <button style="background:none; border:none; color:#888; margin-top:15px; cursor:pointer;" onclick="switchPanel('panel-login')">Geri Dön</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fp-trigger" id="fp-trigger" title="5 Tıkla VIP Giriş">
+        <span style="font-size: 2.8rem;">🔘</span>
+    </div>
+
+    <div class="kule-bar">
+        <div style="display:flex; align-items:center; gap:15px; color:var(--gold); font-size:0.8rem; letter-spacing:2px;">
+            <div style="width:10px; height:10px; background:#0f0; border-radius:50%; box-shadow:0 0 10px #0f0; animation: blink 1.5s infinite;"></div>
+            <span>KULE AI AKTİF</span>
+        </div>
+        <div style="color:#888; font-family:monospace; font-size:0.75rem;" id="kule-msg">Sayın Mehmet Yörük, Karargah emirlerinizi bekliyor.</div>
+    </div>
+
+    <script>
+        let isVip = false;
+        
+        let demoData = [
+            { id: 'd1', name: 'DEMO PROFiL', desc: 'Ziyaretçi DNA Kaydı', icon: '👤' },
+            { id: 'd2', name: 'ÖRNEK VARLIK', desc: 'Sanal Hesap Özeti', icon: '💼' }
+        ];
+
+        let vipData = [
+            { id: 'v1', name: 'MEHMET YÖRÜK', desc: 'Sovereign (Sizin) DNA Alanınız', icon: '👑', lock: true },
+            { id: 'v2', name: 'İPEK YÖRÜK', desc: 'Eş / Protokol Kalkanı', icon: '🕊️', lock: true },
+            { id: 'v3', name: 'AYŞE BETÜL', desc: '1. Veliaht / Eğitim AI', icon: '👧🏻', lock: true },
+            { id: 'v4', name: 'HATİCE NEVA', desc: '2. Veliaht / Gelişim AI', icon: '👧🏻', lock: true },
+            { id: 'v5', name: 'MERYEM ŞİFA', desc: '3. Veliaht / DNA Arşivi', icon: '👶🏻', lock: true },
+            { id: 'v6', name: 'VARLIKLARIM', desc: 'Gayrimenkul, Banka, Tapu', icon: '💰' }
+        ];
+
+        function renderHive() {
+            const grid = document.getElementById('hive-grid');
+            grid.innerHTML = "";
+            let data = isVip ? vipData : demoData;
+
+            data.forEach((hex, idx) => {
+                const h = document.createElement('div');
+                h.className = 'hex-outer draggable';
+                h.setAttribute('draggable', 'true');
+                h.innerHTML = `
+                    <div class="hex-inner">
+                        <div class="hex-actions">
+                            <div class="h-btn" onclick="modifyHex(${idx})" title="Düzelt (Kalem)">✏️</div>
+                            <div class="h-btn" onclick="addDocument('${hex.id}')" title="Belge Ekle (WA/Mail/📷)">➕</div>
+                            <div class="h-btn" onclick="deleteHex(${idx})" style="color:#f00; border-color:#f00;">🗑️</div>
+                        </div>
+                        <div class="hex-pic" onclick="alert('${hex.name} alanı açılıyor...')">${hex.icon}</div>
+                        <div class="hex-title-group">
+                            <h3 class="hex-title">${hex.name}</h3>
+                            <span class="edit-pen" onclick="modifyHex(${idx})">✏️</span>
+                        </div>
+                        <p class="hex-desc">${hex.desc}</p>
+                    </div>
+                `;
+                grid.appendChild(h);
+                addDragEvents(h);
+            });
+
+            // YENİ EKLE PETEĞİ
+            const addBtn = document.createElement('div');
+            addBtn.className = 'hex-outer';
+            addBtn.style.background = 'rgba(212,175,55,0.2)';
+            addBtn.innerHTML = `
+                <div class="hex-inner" onclick="addNewNode()" style="background:transparent;">
+                    <div style="font-size:3.5rem; color:var(--gold);">+</div>
+                    <p style="color:var(--gold); letter-spacing:2px;">YENİ EKLE</p>
+                </div>`;
+            grid.appendChild(addBtn);
+        }
+
+        // --- NASA HASSASİYETİNDE FONKSİYONLAR ---
+        function modifyHex(idx) {
+            let target = isVip ? vipData : demoData;
+            const name = prompt("Yeni İsim / Başlık:", target[idx].name);
+            const desc = prompt("Yeni Açıklama:", target[idx].desc);
+            if(name) target[idx].name = name.toUpperCase();
+            if(desc) target[idx].desc = desc;
+            renderHive();
+            logKule("Veri Islah Edildi.");
+        }
+
+        function deleteHex(idx) {
+            let target = isVip ? vipData : demoData;
+            if(target[idx].lock) {
+                alert("HATA: Bu petek ANA MİRAS protokolüne bağlıdır. Silinmesi için Evlilik/Ölüm belgesi gereklidir.");
+                return;
+            }
+            if(confirm(`"${target[idx].name}" peteğini imha etmek istediğinize emin misiniz?`)) {
+                target.splice(idx, 1);
+                renderHive();
+            }
+        }
+
+        function addNewNode() {
+            let target = isVip ? vipData : demoData;
+            const name = prompt("Yeni Petek İsmi:");
+            if(name) {
+                target.push({ id: Date.now(), name: name.toUpperCase(), desc: 'Yeni Veri Girişi', icon: '💠' });
+                renderHive();
+                logKule("Kovan'a yeni bir hücre eklendi.");
+            }
+        }
+
+        function addDocument(id) {
+            const method = prompt("Belge Giriş Protokolü Seçin:\n1- Kamera (Scan)\n2- WhatsApp\n3- E-Posta\n4- Bulut (Cloud)");
+            alert(`${id} nolu peteğe akıllı AI yönlendirmesi başlatıldı.`);
+        }
+
+        // --- 👁️ GÖZ FONKSİYONU ---
+        function togglePass(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.innerText = "🔒";
+            } else {
+                input.type = "password";
+                icon.innerText = "👁️";
+            }
+        }
+
+        function switchPanel(panelId) {
+            document.querySelectorAll('.auth-panel').forEach(p => {
+                p.classList.remove('active');
+                p.style.transform = 'translateX(-50px)';
+            });
+            setTimeout(() => {
+                const activeP = document.getElementById(panelId);
+                activeP.style.transform = 'translateX(0)';
+                activeP.classList.add('active');
+            }, 300);
+        }
+
+        let fpCount = 0;
+        document.getElementById('fp-trigger').onclick = () => {
+            fpCount++;
+            if(fpCount === 5) {
+                document.getElementById('auth-modal').classList.add('active');
+                fpCount = 0;
+            }
+        };
+
+        function verifyAccess() {
+            const p = document.getElementById('vip-pass').value;
+            if(p === "1234") {
+                isVip = true;
+                document.getElementById('mode-badge').innerText = "MÜHÜRLÜ GERÇEK KARARGAH";
+                document.getElementById('mode-badge').style.color = "#0f0";
+                document.getElementById('mode-badge').style.borderColor = "#0f0";
+                document.getElementById('kule-msg').innerText = "Mühür Açıldı. Hoş Geldiniz Sovereign Mehmet Yörük.";
+                closeAuth();
+                renderHive();
+            } else { 
+                alert("ERİŞİM REDDEDİLDİ: Geçersiz Erişim Anahtarı."); 
+            }
+        }
+
+        function closeAuth() { document.getElementById('auth-modal').classList.remove('active'); }
+        function secureExit() { window.location.href = "index.html"; }
+        function panicProtocol() { alert("KIRMIZI ALARM: Tüm oturumlar sonlandırıldı, sistem mühürlendi!"); window.location.href = "index.html"; }
+        function startVoice() { alert("Karargah dinleniyor..."); }
+        function logKule(msg) { document.getElementById('kule-msg').innerText = `[KULE AI]: ${msg}`; }
+
+        // --- SÜRÜKLE BIRAK (KALICI MANTIK) ---
+        function addDragEvents(elem) {
+            elem.addEventListener('dragstart', () => elem.classList.add('dragging'));
+            elem.addEventListener('dragend', () => elem.classList.remove('dragging'));
+            elem.addEventListener('dragover', e => {
+                e.preventDefault();
+                const grid = document.getElementById('hive-grid');
+                const dragging = document.querySelector('.dragging');
+                if(dragging !== elem) grid.insertBefore(dragging, elem);
+            });
+        }
+
+        renderHive();
+    </script>
+</body>
+</html>

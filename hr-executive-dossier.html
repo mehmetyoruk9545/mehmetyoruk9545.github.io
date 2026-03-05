@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>FOR YOU | Executive Dossier & Report HQ (Tam Korumalı Kasa)</title>
+    <style>
+        :root { --gold: #d4af37; --bg: #02050a; --glass: rgba(10, 10, 15, 0.95); --green: #28a745; --red: #dc3545; --cyan: #00ffff; }
+        body { 
+            background: #02050a; color: #fff; font-family: 'Garamond', serif; margin: 0; padding: 10px; min-height: 100vh; font-size: 13px; 
+            background-image: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%), radial-gradient(circle at 10% 10%, rgba(0, 255, 255, 0.02) 0%, transparent 30%);
+            background-attachment: fixed; animation: backgroundMove 20s infinite alternate;
+        }
+        @keyframes backgroundMove { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+        
+        .nav-controls { position: fixed; top: 15px; left: 25px; z-index: 2000; display: flex; gap: 10px; }
+        .n-btn { background: rgba(0,0,0,0.8); border: 1px solid var(--gold); color: var(--gold); padding: 6px 12px; cursor: pointer; font-size: 10px; border-radius: 4px; backdrop-filter: blur(5px); transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;}
+        .n-btn:hover { background: var(--gold); color: #000; }
+
+        .lang-panel { position: fixed; top: 15px; right: 25px; z-index: 2000; display: flex; gap: 4px; }
+        .l-btn { background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 6px 12px; cursor: pointer; font-size: 10px; border-radius: 4px; transition: 0.3s; }
+        .l-btn.active { background: var(--gold); color: #000; }
+
+        .backup-panel { position: fixed; bottom: 15px; right: 25px; z-index: 2000; display: flex; gap: 10px; background: rgba(0,0,0,0.8); padding: 10px; border: 1px dashed var(--gold); border-radius: 8px; backdrop-filter: blur(5px); }
+        .b-btn { background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; font-size: 10px; font-weight: bold; border-radius: 4px; transition: 0.3s; }
+        .b-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 10px var(--gold); }
+
+        .main-container { max-width: 1000px; margin: 55px auto 20px auto; }
+        
+        .search-panel { display: flex; align-items: center; gap: 15px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); padding: 15px; border-radius: 8px; margin-bottom: 20px; backdrop-filter: blur(10px); }
+        .search-panel input { width: 200px; font-size: 14px; text-align: center; border-color: var(--gold); box-shadow: 0 0 10px rgba(212,175,55,0.2); background: #000; color:#fff; padding:8px; border-radius:4px; outline:none; }
+        
+        .dossier-wrapper { background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.5); border-radius: 12px; padding: 40px; box-shadow: 0 0 50px rgba(0,0,0,1); position: relative; }
+        .dossier-header { text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 30px; }
+        .dossier-header h1 { font-size: 24px; color: var(--gold); margin: 0; letter-spacing: 5px; text-transform: uppercase; }
+        .dossier-header p { margin: 5px 0 0 0; color: #888; font-size: 11px; letter-spacing: 2px; }
+
+        .dossier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .dossier-section { border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; background: rgba(0,0,0,0.4); }
+        .d-title { color: var(--gold); font-size: 12px; border-bottom: 1px dashed #444; padding-bottom: 5px; margin-bottom: 15px; letter-spacing: 2px; }
+        .d-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
+        .d-lbl { color: #aaa; } .d-val { font-weight: bold; color: #fff; }
+
+        .ai-summary { grid-column: span 2; background: rgba(0, 255, 255, 0.03); border: 1px solid rgba(0, 255, 255, 0.3); padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .ai-summary h3 { color: var(--cyan); margin-top: 0; font-size: 12px; letter-spacing: 2px; }
+        .ai-summary p { font-family: monospace; color: #ddd; line-height: 1.6; font-size: 13px; margin: 0; }
+
+        .action-bar { display: flex; gap: 15px; margin-top: 25px; }
+        .action-btn { flex: 1; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; letter-spacing: 2px; font-size: 12px; transition: 0.3s; border: none; }
+        .btn-print { background: rgba(212,175,55,0.1); border: 1px solid var(--gold); color: var(--gold); }
+        .btn-print:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
+        .btn-wa { background: rgba(40,167,69,0.1); border: 1px solid var(--green); color: var(--green); }
+        .btn-wa:hover { background: var(--green); color: #fff; box-shadow: 0 0 15px var(--green); }
+
+        .list-panel { background: rgba(0,0,0,0.6); padding: 25px; border-top: 1px solid var(--gold); margin-top: 35px; border-radius: 8px; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .data-table th, .data-table td { padding: 10px; text-align: left; border-bottom: 1px solid #333; }
+        .data-table th { color: var(--gold); font-size: 10px; text-transform: uppercase; }
+        
+        .btn-call { background: none; border: 1px solid var(--cyan); color: var(--cyan); padding: 5px 10px; cursor: pointer; font-size: 9px; border-radius: 4px; }
+        .btn-call:hover { background: var(--cyan); color: #000; }
+
+        @media print {
+            body { background: #fff; color: #000; }
+            .nav-controls, .lang-panel, .backup-panel, .search-panel, .action-bar, .list-panel { display: none; }
+            .dossier-wrapper { border: none; box-shadow: none; padding: 0; }
+            .dossier-header h1, .d-title, .d-val { color: #000; }
+            .dossier-section { border: 1px solid #ccc; background: #fff; }
+            .ai-summary { border: 1px solid #000; background: #f9f9f9; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div class="nav-controls">
+        <button class="n-btn" onclick="location.href='index.html'" data-key="nav_home">ANA SAYFA</button>
+        <button class="n-btn" onclick="location.href='hr-master-dna.html'" data-key="nav_dna">DNA MATRİSİ</button>
+        <button class="n-btn" onclick="location.href='hr-financial-hq.html'" data-key="nav_fin">FİNANSAL HQ</button>
+        <button class="n-btn" onclick="location.href='hr-performance-hq.html'" data-key="nav_perf">PERFORMANS HQ</button>
+    </div>
+
+    <div class="lang-panel">
+        <button class="l-btn active" onclick="setLang('tr')">TR</button>
+        <button class="l-btn" onclick="setLang('en')">EN</button>
+        <button class="l-btn" onclick="setLang('ru')">RU</button>
+        <button class="l-btn" onclick="setLang('zh')">ZH</button>
+        <button class="l-btn" onclick="setLang('ar')">AR</button>
+        <button class="l-btn" onclick="setLang('de')">DE</button>
+        <button class="l-btn" onclick="setLang('fr')">FR</button>
+        <button class="l-btn" onclick="setLang('es')">ES</button>
+    </div>
+
+    <div class="backup-panel">
+        <button class="b-btn" onclick="exportData()" data-key="btn_export">💾 YEDEĞİ BİLGİSAYARA İNDİR</button>
+        <input type="file" id="importFile" style="display:none" onchange="importData(this)">
+        <button class="b-btn" onclick="document.getElementById('importFile').click()" data-key="btn_import">📂 SİSTEME YEDEK YÜKLE</button>
+    </div>
+
+    <div class="main-container">
+        <div class="search-panel">
+            <input type="text" id="doc_tc_search" placeholder="T.C. KİMLİK SORGULA..." data-key="ph_tc_search">
+            <button class="b-btn" onclick="generateDossier(document.getElementById('doc_tc_search').value)" data-key="btn_search_doc">🔍 DOSYAYI ÇAĞIR</button>
+        </div>
+
+        <div class="dossier-wrapper" id="printArea">
+            <div class="dossier-header">
+                <h1 data-key="title_dossier">EXECUTIVE DOSSIER | YÖNETİCİ ÖZETİ</h1>
+                <p id="report_date">Rapor Tarihi: ---</p>
+            </div>
+
+            <div class="dossier-grid">
+                <div class="dossier-section">
+                    <div class="d-title" data-key="sec_personal">I. KİŞİSEL & KİMLİK PROFİLİ</div>
+                    <div class="d-row"><span class="d-lbl" data-key="lbl_fullname">Ad Soyad:</span><span class="d-val" id="d_name">-</span></div>
+                    <div class="d-row"><span class="d-lbl" data-key="lbl_id">T.C. Kimlik:</span><span class="d-val" id="d_tc">-</span></div>
+                    <div class="d-row"><span class="d-lbl" data-key="lbl_title">Ünvan:</span><span class="d-val" id="d_title">-</span></div>
+                    <div class="d-row"><span class="d-lbl" data-key="lbl_entry">Giriş Tarihi:</span><span class="d-val" id="d_entry">-</span></div>
+                    <div class="d-row"><span class="d-lbl" data-key="lbl_reg">Sicil No:</span><span class="d-val" id="d_reg">-</span></div>
+                </div>
+
+                <div class="dossier-section">
+                    <div class="d-title" data-key="sec_perf">II. PERFORMANS & RİSK ENDEKSİ</div>
+                    <div class="d-row"><span class="d-lbl" data-key="lbl_score_avg">Genel Sicil Notu:</span><span class="d-val" id="d_score">-</span></div>
+                    <div class="d-row"><span class="d-lbl" data-key="lbl_cat_status">Kategori Durumu:</span><span class="d-val" id="d_status">-</span></div>
+                    <div class="d-row"><span class="d-lbl" data-key="lbl_risk_level">Kıdem Riski:</span><span class="d-val" id="d_risk">-</span></div>
+                    <div class="d-row"><span class="d-lbl" data-key="lbl_loyalty">Sadakat Skoru:</span><span class="d-val" id="d_loyalty">-</span></div>
+                </div>
+
+                <div class="ai-summary">
+                    <h3 data-key="sec_ai">III. STRATEJİK AI DEĞERLENDİRMESİ</h3>
+                    <p id="d_ai_report" data-key="ph_ai_report">Sistem Verisi Bekleniyor...</p>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="action-btn btn-print" onclick="window.print()" data-key="btn_print">🖨️ PDF OLARAK KAYDET / YAZDIR</button>
+                <button class="action-btn btn-wa" onclick="sendWhatsApp()" data-key="btn_wa">💬 WHATSAPP İLE YÖNETİCİYE GÖNDER</button>
+            </div>
+        </div>
+
+        <div class="list-panel">
+            <input type="text" id="live_search" placeholder="İsimle Hızlı Ara (Örn: Ah...)" data-key="ph_live_search" oninput="renderList(this.value)" style="width:100%; padding:10px; background:#000; border:1px solid var(--gold); color:#fff; border-radius:4px; margin-bottom:10px; outline:none;">
+            <table class="data-table">
+                <thead><tr>
+                    <th width="5%" data-key="th_no">NO</th>
+                    <th width="25%" data-key="th_name">AD SOYAD</th>
+                    <th width="20%" data-key="th_title">ÜNVAN</th>
+                    <th width="20%" data-key="th_score_avg">SİCİL NOTU</th>
+                    <th width="15%" data-key="th_actions">İŞLEM</th>
+                </tr></thead>
+                <tbody id="emp_list_body"></tbody>
+            </table>
+        </div>
+    </div>
+
+<script src="dictionary.js"></script>
+<script src="hr-storage.js"></script>
+<script>
+    document.getElementById('report_date').innerText = "Rapor Tarihi: " + new Date().toLocaleDateString('tr-TR');
+    
+    // 🛡️ YEDEKLEME MOTORU KÖPRÜSÜ
+    function exportData() { if(typeof FOR_YOU_STORAGE !== 'undefined') FOR_YOU_STORAGE.exportDatabase(); }
+    function importData(file) { if(typeof FOR_YOU_STORAGE !== 'undefined') FOR_YOU_STORAGE.importDatabase(file); }
+
+    // 🌐 EKSİKSİZ DİL MOTORU (DİĞER HİÇBİR FONKSİYONA DOKUNULMAMIŞTIR)
+    function setLang(l) { localStorage.setItem('FY_LANG', l); applyLang(); renderList(); }
+    
+    function applyLang() { 
+        const lang = localStorage.getItem('FY_LANG') || 'tr';
+        if (typeof FY_DICTIONARY === 'undefined') return;
+        
+        document.querySelectorAll('[data-key]').forEach(el => {
+            const k = el.getAttribute('data-key');
+            if (FY_DICTIONARY[k] && FY_DICTIONARY[k][lang]) {
+                const text = FY_DICTIONARY[k][lang];
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = text;
+                } else {
+                    el.innerHTML = text;
+                }
+            }
+        });
+        document.querySelectorAll('.l-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === lang));
+        
+        const datePrefix = (lang === 'en') ? "Report Date: " : "Rapor Tarihi: ";
+        document.getElementById('report_date').innerText = datePrefix + new Date().toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US');
+    }
+
+    let activeEmpData = null;
+
+    function generateDossier(tc) {
+        if (!tc) return;
+        const emp = FOR_YOU_STORAGE.getData('EMPLOYEES').find(e => e.tcNo === tc);
+        if(!emp) { alert("Sistem: Personel Bulunamadı!"); return; }
+        
+        activeEmpData = emp;
+        document.getElementById('d_name').innerText = emp.name || '-';
+        document.getElementById('d_tc').innerText = emp.tcNo;
+        document.getElementById('d_title').innerText = emp.title || '-';
+        document.getElementById('d_entry').innerText = emp.entry || '-';
+        document.getElementById('d_reg').innerText = emp.sicil || '-';
+        
+        const score = parseFloat(emp.score_avg) || 0;
+        document.getElementById('d_score').innerText = score.toFixed(1) + " / 100";
+        document.getElementById('d_status').innerText = score >= 80 ? "VIP Hizmete Uygun" : (score >= 50 ? "Gelişim Bekliyor" : "Riskli");
+        
+        const sev = score >= 70 ? "DÜŞÜK (Güvenli)" : (score >= 50 ? "ORTA (İzlenmeli)" : "YÜKSEK (Kritik)");
+        document.getElementById('d_risk').innerText = sev;
+        document.getElementById('d_loyalty').innerText = "%" + (Math.min(100, score + 10).toFixed(0));
+
+        document.getElementById('d_ai_report').innerText = `>> ANALİZ:\nAdı geçen personel (${emp.name}), mevcut performans endeksi (${score}/100) ile sistem tarafından taranmıştır.\n>> STRATEJİ:\n${score >= 70 ? 'VIP görevlerde istihdam edilebilir. Sadakat seviyesi yüksek.' : 'Risk barındırıyor. Yakın takip gereklidir.'}`;
+    }
+
+    function sendWhatsApp() {
+        if(!activeEmpData) return;
+        const score = parseFloat(activeEmpData.score_avg) || 0;
+        const sev = score >= 70 ? "DÜŞÜK" : "YÜKSEK";
+        let text = `*FOR YOU | YÖNETİCİ ÖZETİ*%0a%0a👤 *Personel:* ${activeEmpData.name}%0a🏷️ *Ünvan:* ${activeEmpData.title}%0a⭐ *Sicil Notu:* ${score}/100%0a⚠️ *Kıdem Riski:* ${sev}%0a%0a_Bu mesaj FOR-YOU Sisteminden otomatik oluşturulmuştur._`;
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+
+    function renderList(filterWord = '') {
+        const tbody = document.getElementById('emp_list_body'); tbody.innerHTML = '';
+        if(typeof FOR_YOU_STORAGE !== 'undefined') {
+            let list = FOR_YOU_STORAGE.getData('EMPLOYEES');
+            if(filterWord.trim() !== '') { 
+                const lowerFilter = filterWord.toLowerCase(); 
+                list = list.filter(emp => emp.name && emp.name.toLowerCase().startsWith(lowerFilter)); 
+            }
+            list.forEach((emp, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${index+1}</td><td style="color:var(--gold); font-weight:bold;">${emp.name||'-'}</td><td>${emp.title||'-'}</td><td>${emp.score_avg||'0.0'}</td>
+                <td><button class="btn-call" onclick="document.getElementById('doc_tc_search').value='${emp.tcNo}'; generateDossier('${emp.tcNo}')" data-key="btn_call_doc">DOSYA</button></td>`;
+                tbody.appendChild(tr);
+            });
+            applyLang(); // Dil motorunu dinamik tabloya da işle
+        }
+    }
+
+    window.onload = () => { applyLang(); renderList(); };
+</script>
+</body>
+</html>
