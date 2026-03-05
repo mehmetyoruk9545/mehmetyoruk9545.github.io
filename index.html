@@ -88,7 +88,7 @@
             height: 42.5vw; 
             max-width: 680px;
             max-height: 340px;
-            left: calc(50% - min(42.5vw, 340px));
+            left: calc(50% - min(42.5vw, 340px)); 
             top: calc(50% - min(21.25vw, 170px));
             background: var(--dark-box); 
             border: 2px solid #fff; 
@@ -128,6 +128,8 @@
             .top-bar { top: 10px; right: 10px; flex-direction: column; align-items: flex-end; }
             .ai-indicator { bottom: 10px; left: 20px; }
             .crystal-face { width: 90vw; height: 50vh; left: 5vw; top: 25vh; }
+            .crystal-face h2 { font-size: 1.8rem; letter-spacing: 8px; }
+            .crystal-face p { font-size: 0.9rem; letter-spacing: 2px; }
         }
     </style>
 </head>
@@ -199,6 +201,7 @@
         let idleTimer;
         let isCurtainClosed = true;
         let gateClickCount = 0;
+        let isExecView = false;
 
         function init() {
             nodes.forEach((node, i) => {
@@ -269,11 +272,25 @@
             window.location.href = 'gateway.html';
         // --- 5 TIK GEÇİDİ (SOVEREIGN GATEWAY) ---
         function sovGate() {
+            // 1. MİMARİ DÜZELTME: Her tıklama, uyku modundaysa sistemi anında uyandırır.
+            wakeUpSystem(); 
+
             gateClickCount++;
+
+            // 2. GÖRSEL GERİ BİLDİRİM: Tıklama anında logoyu anlık olarak parlatır.
+            const logo = document.getElementById('gate-key');
+            logo.style.transition = 'transform 0.1s, box-shadow 0.1s';
+            logo.style.transform = 'scale(1.1)';
+            logo.style.boxShadow = '0 0 80px var(--gold)';
+            setTimeout(() => {
+                logo.style.transform = 'scale(1)';
+                logo.style.boxShadow = '0 0 30px var(--gold-glow)';
+            }, 150);
+
             if (gateClickCount >= 5) {
                 window.location.href = 'gateway.html';
             }
-            setTimeout(() => { if (gateClickCount < 5) gateClickCount = 0; }, 3000);
+            setTimeout(() => { if (gateClickCount < 5) gateClickCount = 0; }, 3000); // 3 saniyede 5 tık yapılmazsa sayacı sıfırla
         }
 
         // Logoya tıklandığında (ortada veya köşedeyken) sadece Gateway'e gider
@@ -337,7 +354,6 @@
                 }
             }
         }
-
 
         function rotateSphere(dir, requestedAxis) {
             if (activeAxis !== requestedAxis) {
