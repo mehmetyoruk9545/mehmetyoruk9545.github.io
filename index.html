@@ -12,7 +12,6 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body, html { height: 100%; overflow: hidden; background-color: transparent; font-family: 'Garamond', serif; color: white; }
-        body, html { height: 100%; overflow: hidden; background-color: transparent; font-family: 'Garamond', serif; color: white; max-width: 100%; overflow-x: hidden; touch-action: pan-y; }
 
         /* 🌊 OKYANUS - TAM NETLİK */
         #bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -100; filter: brightness(0.4) contrast(1.1); }
@@ -83,13 +82,6 @@
         
         .crystal-face {
             position: absolute; width: 680px; height: 340px; left: calc(50% - 340px); top: calc(50% - 170px);
-            position: absolute; 
-            width: 85vw; 
-            height: 42.5vw; 
-            max-width: 680px;
-            max-height: 340px;
-            left: calc(50% - min(42.5vw, 340px)); 
-            top: calc(50% - min(21.25vw, 170px));
             background: var(--dark-box); 
             border: 2px solid #fff; 
             border-radius: 8px; 
@@ -128,9 +120,21 @@
             .top-bar { top: 10px; right: 10px; flex-direction: column; align-items: flex-end; }
             .ai-indicator { bottom: 10px; left: 20px; }
             .crystal-face { width: 90vw; height: 50vh; left: 5vw; top: 25vh; }
-            .crystal-face h2 { font-size: 1.8rem; letter-spacing: 8px; }
-            .crystal-face p { font-size: 0.9rem; letter-spacing: 2px; }
         }
+        /* MOBİL UYUM - Hiçbir şeyi bozmadan ekliyoruz */
+@media (max-width: 768px) {
+    body { font-size: 0.9rem; }
+    h1 { font-size: 2.5rem; margin: 20px 0; }
+    p, .tagline, .bottom-text { font-size: 1rem; padding: 0 15px; }
+    .enter-btn { padding: 12px 40px; font-size: 1rem; }
+    .logo-container { top: 5px; left: 5px; transform: scale(0.8); }
+}
+
+@media (max-width: 480px) {
+    h1 { font-size: 2rem; }
+    .enter-btn { padding: 10px 30px; font-size: 0.9rem; }
+    .logo-container { transform: scale(0.7); }
+}
     </style>
 </head>
 <body>
@@ -192,16 +196,11 @@
         
         const theta = 360 / nodes.length; 
         const radius = Math.round((680 / 2) / Math.tan(Math.PI / nodes.length)) + 250; 
-        const faceWidth = Math.min(window.innerWidth * 0.85, 680);
-        const theta = 360 / nodes.length;
-        const radius = Math.round((faceWidth / 2) / Math.tan(Math.PI / nodes.length)) + (window.innerWidth < 768 ? 150 : 250);
         
         let selectedIndex = 0;
         let activeAxis = 'Y';
         let idleTimer;
         let isCurtainClosed = true;
-        let gateClickCount = 0;
-        let isExecView = false;
 
         function init() {
             nodes.forEach((node, i) => {
@@ -270,34 +269,12 @@
         // --- GATEWAY (YETKİLİ) YÖNLENDİRMESİ ---
         function triggerGateway() {
             window.location.href = 'gateway.html';
-        // --- 5 TIK GEÇİDİ (SOVEREIGN GATEWAY) ---
-        function sovGate() {
-            // 1. MİMARİ DÜZELTME: Her tıklama, uyku modundaysa sistemi anında uyandırır.
-            wakeUpSystem(); 
-
-            gateClickCount++;
-
-            // 2. GÖRSEL GERİ BİLDİRİM: Tıklama anında logoyu anlık olarak parlatır.
-            const logo = document.getElementById('gate-key');
-            logo.style.transition = 'transform 0.1s, box-shadow 0.1s';
-            logo.style.transform = 'scale(1.1)';
-            logo.style.boxShadow = '0 0 80px var(--gold)';
-            setTimeout(() => {
-                logo.style.transform = 'scale(1)';
-                logo.style.boxShadow = '0 0 30px var(--gold-glow)';
-            }, 150);
-
-            if (gateClickCount >= 5) {
-                window.location.href = 'gateway.html';
-            }
-            setTimeout(() => { if (gateClickCount < 5) gateClickCount = 0; }, 3000); // 3 saniyede 5 tık yapılmazsa sayacı sıfırla
         }
 
         // Logoya tıklandığında (ortada veya köşedeyken) sadece Gateway'e gider
         document.getElementById('gate-key').addEventListener('click', (e) => {
             e.stopPropagation(); // Diğer tıklamalarla çakışmayı önler
             triggerGateway();
-            sovGate();
         });
 
         // --- KLAVYE KONTROLLERİ ---
@@ -307,7 +284,6 @@
             if (e.key === 'Enter') {
                 triggerGateway(); // Enter tuşu Gateway'e atandı
             } else if (e.key === 'ArrowRight') {
-            if (e.key === 'ArrowRight') {
                 rotateSphere(1, 'Y');
             } else if (e.key === 'ArrowLeft') {
                 rotateSphere(-1, 'Y');
@@ -317,43 +293,6 @@
                 rotateSphere(-1, 'X');
             }
         });
-
-        // --- DOKUNMATİK HAREKET (MOBİL) ---
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let touchEndX = 0;
-        let touchEndY = 0;
-        const swipeThreshold = 50; // Kaydırma olarak algılanacak minimum piksel
-
-        document.body.addEventListener('touchstart', (e) => {
-            if (e.target.closest('#gate-key')) return;
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
-        }, { passive: true });
-
-        document.body.addEventListener('touchend', (e) => {
-            if (e.target.closest('#gate-key')) return;
-            touchEndX = e.changedTouches[0].screenX;
-            touchEndY = e.changedTouches[0].screenY;
-            handleSwipe();
-        }, { passive: true });
-
-        function handleSwipe() {
-            const deltaX = touchEndX - touchStartX;
-            const deltaY = touchEndY - touchStartY;
-
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                if (Math.abs(deltaX) > swipeThreshold) {
-                    if (deltaX > 0) { rotateSphere(-1, 'Y'); } // Sağa kaydırma (sola döndür)
-                    else { rotateSphere(1, 'Y'); } // Sola kaydırma (sağa döndür)
-                }
-            } else { // Dikey kaydırma
-                if (Math.abs(deltaY) > swipeThreshold) {
-                    if (deltaY > 0) { rotateSphere(-1, 'X'); } // Aşağı kaydırma (yukarı döndür)
-                    else { rotateSphere(1, 'X'); } // Yukarı kaydırma (aşağı döndür)
-                }
-            }
-        }
 
         function rotateSphere(dir, requestedAxis) {
             if (activeAxis !== requestedAxis) {
@@ -413,6 +352,31 @@
         carousel.style.transform = `translateZ(${-radius}px) rotateY(0deg)`;
         
         // Başlangıçta sistem uykudadır (Perde kapalı, logo ortada). Fare hareket edince uyanır.
+        // ────────────────────────────────────────────────
+// GERÇEK GİZLİ GİRİŞ: SADECE 5 TIKLAMADA AÇILIR
+// ────────────────────────────────────────────────
+let gizliTiklamaSayisi = 0;
+const gizliLogo = document.querySelector('.logo-container');
+
+if (gizliLogo) {
+    gizliLogo.style.cursor = 'default'; // üzerine gelince el işareti çıkmasın
+
+    gizliLogo.addEventListener('click', (e) => {
+        e.preventDefault(); // ekstra güvenlik
+        gizliTiklamaSayisi++;
+
+        // Hafif görsel sinyal (dikkat çekmesin)
+        gizliLogo.style.transform = 'scale(1.08)';
+        setTimeout(() => {
+            gizliLogo.style.transform = 'scale(1)';
+        }, 120);
+
+        if (gizliTiklamaSayisi === 5) {
+            window.location.href = 'gateway.html'; // ← burayı senin gerçek giriş sayfana göre değiştir
+            gizliTiklamaSayisi = 0;
+        }
+    });
+}
     </script>
 </body>
 </html>
