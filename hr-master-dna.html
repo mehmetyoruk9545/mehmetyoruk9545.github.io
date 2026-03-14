@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOR YOU | ISO-DNA Strategic Matrix v14.6 (Ultimate SGK GPS)</title>
+    <style>
+        :root {
+            --gold: #d4af37;
+            --bg: #02050a;
+            --glass: rgba(10, 10, 15, 0.95);
+            --cyan: #00ffff;
+            --red: #ff3333;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Garamond', serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #bg-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            filter: brightness(0.2) contrast(1.1);
+            object-fit: cover;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            border-bottom: 1px solid var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 25px;
+            z-index: 2500;
+            backdrop-filter: blur(15px);
+            box-sizing: border-box;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .lang-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+        }
+
+        .n-btn {
+            background: none;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 8px 18px;
+            cursor: pointer;
+            font-size: 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .n-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        .l-btn {
+            background: #000;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: var(--gold);
+            padding: 4px 10px;
+            cursor: pointer;
+            font-size: 9px;
+            border-radius: 3px;
+        }
+
+        .l-btn.active {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+        }
+
+        .dna-matrix {
+            max-width: 1450px;
+            margin: 90px auto 40px auto;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+        }
+
+        .tab-menu {
+            display: flex;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid var(--gold);
+            overflow-x: auto;
+        }
+
+        .tab-link {
+            padding: 20px 30px;
+            border: none;
+            background: none;
+            color: #555;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .tab-link.active {
+            color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .iso-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        label {
+            color: var(--gold);
+            font-size: 11px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            display: block;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+
+        input,
+        textarea,
+        select {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #222;
+            padding: 14px;
+            color: #fff;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 13px;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--gold);
+            box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.1);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #555;
+            font-style: italic;
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 25px;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 5px;
+            font-size: 14px;
+            transition: 0.3s;
+            margin-top: 20px;
+            text-transform: uppercase;
+        }
+
+        .save-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 30px var(--gold);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        .data-table th {
+            color: var(--gold);
+            font-size: 10px;
+            text-align: left;
+            padding: 18px;
+            border-bottom: 1px solid #333;
+            background: rgba(0, 0, 0, 0.6);
+            text-transform: uppercase;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid #222;
+            font-size: 12px;
+        }
+
+        .sm-btn {
+            padding: 8px 15px;
+            font-size: 9px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid;
+            background: none;
+            text-transform: uppercase;
+            transition: 0.2s;
+            margin-right: 5px;
+        }
+
+        .sm-btn:hover {
+            filter: brightness(1.5);
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid #333;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .auth-row {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr 1fr 1fr;
+            gap: 15px;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .ocr-zone {
+            border: 2px dashed var(--gold);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: rgba(212, 175, 55, 0.05);
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 30px;
+        }
+
+        .ocr-zone:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        .sgk-block-title {
+            color: var(--cyan);
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false;">
+
+    <video autoplay muted loop id="bg-video">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-star-field-in-deep-space-34361-large.mp4" type="video/mp4">
+    </video>
+
+    <div class="top-bar">
+        <div class="nav-links">
+            <button class="n-btn" onclick="location.href='index.html'" data-key="nav_home">ANA SAYFA</button>
+            <button class="n-btn" onclick="location.href='fy-admin-hq.html'" data-key="nav_hq">KARARGAH</button>
+            <button class="n-btn" onclick="location.href='gateway.html'" style="color:var(--red); border-color:var(--red);" data-key="nav_exit">GÜVENLİ ÇIKIŞ</button>
+        </div>
+        <div class="lang-panel">
+            <div class="lang-grid">
+                <button class="l-btn active" onclick="setLang('tr')">TR</button>
+                <button class="l-btn" onclick="setLang('en')">EN</button>
+                <button class="l-btn" onclick="setLang('ru')">RU</button>
+                <button class="l-btn" onclick="setLang('zh')">ZH</button>
+                <button class="l-btn" onclick="setLang('ar')">AR</button>
+                <button class="l-btn" onclick="setLang('de')">DE</button>
+                <button class="l-btn" onclick="setLang('fr')">FR</button>
+                <button class="l-btn" onclick="setLang('es')">ES</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dna-matrix">
+        <div class="tab-menu">
+            <button class="tab-link active" onclick="openTab(event, 'core')" data-key="tab_core">ANA KİMLİK</button>
+            <button class="tab-link" onclick="openTab(event, 'sgk_eyt')" data-key="tab_sgk_eyt">SGK & EYT KİMLİĞİ</button>
+            <button class="tab-link" onclick="openTab(event, 'family')" data-key="tab_family">AİLE MATRİSİ</button>
+            <button class="tab-link" onclick="openTab(event, 'finance')" data-key="tab_finance">FİNANS & VARLIK</button>
+            <button class="tab-link" onclick="openTab(event, 'health')" data-key="tab_health">SAĞLIK & PSİKO</button>
+            <button class="tab-link" onclick="openTab(event, 'auth_matrix')" data-key="tab_auth">YETKİ MATRİSİ</button>
+            <button class="tab-link" onclick="openTab(event, 'ai_analyst')" data-key="tab_ai">AI ANALİZ</button>
+        </div>
+
+        <div id="core" class="tab-content active">
+            <div id="status_alert" style="color:var(--gold); font-size:10px; margin-bottom:20px; letter-spacing:2px; text-transform:uppercase;" data-key="stat_ready">SİSTEM: VERİ TARAFA HAZIR</div>
+            <div class="iso-grid">
+                <div class="iso-item"><label data-key="lbl_tc">T.C. KİMLİK</label><input type="text" id="m_tc" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,''); checkTC(this.value);" data-key="ph_tc" placeholder="11 RAKAM GİRİN"></div>
+                <div class="iso-item"><label data-key="lbl_sicil">SİCİL NO</label><input type="text" id="m_sicil" readonly style="color:var(--cyan); font-weight:bold;" data-key="ph_auto" placeholder="OTOMATİK OLUŞTURULUR"></div>
+                <div class="iso-item"><label data-key="lbl_name">AD SOYAD</label><input type="text" id="m_name" data-key="ph_name" placeholder="TAM İSİM"></div>
+                <div class="iso-item"><label data-key="lbl_job">MESLEK KODU</label><input type="text" id="m_jobCode" data-key="ph_job" placeholder="ÖRN: GUV, HUK"></div>
+                <div class="iso-item"><label data-key="lbl_title">ÜNVAN</label><input type="text" id="m_title"></div>
+                <div class="iso-item"><label data-key="lbl_unit">BİRİM / ÜNİTE</label><input type="text" id="m_unit" value="ÜNİTE-01"></div>
+                <div class="iso-item"><label data-key="lbl_phone">TELEFON</label><input type="text" id="m_phone" data-key="ph_phone" placeholder="+90..."></div>
+                <div class="iso-item"><label data-key="lbl_email">E-POSTA</label><input type="text" id="m_email" style="text-transform:none;"></div>
+            </div>
+        </div>
+                <div id="sgk_eyt" class="tab-content">
+            <div class="ocr-zone" id="ocr_zone" onclick="document.getElementById('ocr_file').click()"
+                ondragover="event.preventDefault(); this.style.borderColor='var(--cyan)';"
+                ondragleave="this.style.borderColor='var(--gold)';" ondrop="handleDrop(event)">
+                <input type="file" id="ocr_file" style="display:none" accept=".pdf,image/*"
+                    onchange="simulateOCR(this.files[0])">
+                <div style="font-size:35px; margin-bottom:10px;">📄</div>
+                <div style="color:var(--gold); font-size:12px; font-weight:bold; letter-spacing:1px;" data-key="lbl_ocr_drag">SGK HİZMET DÖKÜMÜNÜ BURAYA SÜRÜKLEYİN VEYA TIKLAYIN (Yapay Zeka OCR)</div>
+                <div style="font-size:10px; color:#aaa; margin-top:8px;">Desteklenen Formatlar: PDF, PNG, JPG (Barkodlu Dökümler İçin Optimize Edilmiştir)</div>
+            </div>
+
+            <div class="sgk-block-title" data-key="title_sgk_dates">I. KRİTİK TARİHLER VE "STAJ" ÇATIŞMASI</div>
+            <div class="iso-grid">
+                <div class="iso-item"><label data-key="lbl_dob">DOĞUM TARİHİ</label><input type="text" id="m_dob" placeholder="GG.AA.YYYY" oninput="formatDate(this)"></div>
+                <div class="iso-item"><label data-key="lbl_sgk_staj">STAJ / ÇIRAKLIK GİRİŞİ (UZUN VADE SAYILMAZ)</label><input type="text" id="m_sgkStaj" placeholder="GG.AA.YYYY" oninput="formatDate(this)"></div>
+                <div class="iso-item"><label style="color:#fff;" data-key="lbl_sgk_entry">FİİLİ SİGORTA GİRİŞİ (ANA EMEKLİLİK BAZI)</label><input type="text" id="m_entryDate" style="border-color:var(--gold);" placeholder="GG.AA.YYYY" oninput="formatDate(this)"></div>
+            </div>
+
+            <div class="sgk-block-title" data-key="title_sgk_1260">II. PRİM GÜN KASASI VE 1260 GÜN KURALI (SON 7 YIL DAĞILIMI)</div>
+            <div class="iso-grid">
+                <div class="iso-item"><label data-key="lbl_4a_days">TOPLAM 4/A (SSK) GÜNÜ</label><input type="number" id="m_days4A" placeholder="0"></div>
+                <div class="iso-item"><label data-key="lbl_4b_days">TOPLAM 4/B (BAĞ-KUR) GÜNÜ</label><input type="number" id="m_days4B" placeholder="0"></div>
+                <div class="iso-item"><label data-key="lbl_4c_days">TOPLAM 4/C (EMEK. SANDIĞI) GÜNÜ</label><input type="number" id="m_days4C" placeholder="0"></div>
+                <div class="iso-item"><label style="color:var(--cyan);" data-key="lbl_son_4a">SON 2520 GÜN İÇİNDE SSK (4/A)</label><input type="number" id="m_son4A" style="border-color:var(--cyan);" placeholder="0"></div>
+                <div class="iso-item"><label style="color:var(--cyan);" data-key="lbl_son_4b">SON 2520 GÜN İÇİNDE BAĞ-KUR (4/B)</label><input type="number" id="m_son4B" style="border-color:var(--cyan);" placeholder="0"></div>
+                <div class="iso-item"><label style="color:var(--cyan);" data-key="lbl_son_4c">SON 2520 GÜN İÇİNDE EMK.SND. (4/C)</label><input type="number" id="m_son4C" style="border-color:var(--cyan);" placeholder="0"></div>
+            </div>
+
+            <div class="sgk-block-title" data-key="title_sgk_borc">III. BORÇLANMA VE GÜN KAZANIMLARI (İHYA)</div>
+            <div class="iso-grid">
+                <div class="iso-item"><label data-key="lbl_borc_asker">ASKERLİK BORÇLANMASI (GÜN)</label><input type="number" id="m_borcAsker" placeholder="0"></div>
+                <div class="iso-item"><label data-key="lbl_borc_dogum">DOĞUM BORÇLANMASI (GÜN)</label><input type="number" id="m_borcDogum" placeholder="0"></div>
+                <div class="iso-item"><label data-key="lbl_borc_yurt">YURTDIŞI BORÇLANMASI (GÜN)</label><input type="number" id="m_borcYurt" placeholder="0"></div>
+                <div class="iso-item"><label data-key="lbl_retire_pref">EMEKLİLİK HEDEF TERCİHİ</label>
+                    <select id="m_retirePref">
+                        <option value="tam">Normal (Tam) Emeklilik</option>
+                        <option value="kismi">Kısmi (Yaş Haddinden) Emeklilik</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sgk-block-title" style="color:var(--gold);" data-key="title_sgk_ai">IV. YAPAY ZEKA 360° EMEKLİLİK VE TAHSİS DANIŞMANI</div>
+            <textarea id="ai_tahsis_out" rows="14" readonly style="color:var(--gold); font-family:monospace; background:rgba(212,175,55,0.05); border-color:var(--gold); resize:none; font-size:13px; line-height:1.5;" placeholder="> Sistem Veri Bekliyor... 1260 Kuralı ve Kurum Bazlı Tahsis Rotaları için Motoru Çalıştırın."></textarea>
+            <button class="sm-btn" style="color:var(--gold); border-color:var(--gold); margin-top:10px; width:100%; padding:15px; font-weight:bold; letter-spacing:1px; font-size:12px;" onclick="simulateTahsisAI()" data-key="btn_run_tahsis">TÜM KURUMLAR İÇİN (SSK/BAĞ-KUR/4C) STRATEJİK ROTALARI OLUŞTUR</button>
+        </div>
+
+        <div id="dynamic-sections"></div>
+
+        <div id="auth_matrix" class="tab-content">
+            <h3 style="color:var(--gold); font-size:14px; letter-spacing:2px; margin-bottom:25px;" data-key="title_auth">OPERASYONEL YETKİ VE ERİŞİM MATRİSİ</h3>
+            <div class="auth-card">
+                <div class="auth-row" style="color:var(--gold); font-weight:bold; font-size:10px; border-bottom:1px solid var(--gold);">
+                    <div data-key="auth_def">YETKİ TANIMI</div>
+                    <div data-key="auth_mgmt">YÖNETİM</div>
+                    <div data-key="auth_lead">AMİR</div>
+                    <div data-key="auth_staff">PERSONEL</div>
+                </div>
+                <div class="auth-row">
+                    <div data-key="auth_dna">DNA Görüntüleme</div><input type="checkbox" checked disabled><input type="checkbox" checked><input type="checkbox" checked>
+                </div>
+                <div class="auth-row">
+                    <div data-key="auth_vault">Finansal Derin Kasa Erişimi</div><input type="checkbox" checked disabled><input type="checkbox"><input type="checkbox" disabled>
+                </div>
+                <div class="auth-row">
+                    <div data-key="auth_filter">Ünite Bazlı Filtreleme</div><input type="checkbox" disabled><input type="checkbox" checked><input type="checkbox" checked>
+                </div>
+                <div class="auth-row">
+                    <div data-key="auth_del">Veri İmha (DNA Silme)</div><input type="checkbox" checked disabled><input type="checkbox"><input type="checkbox" disabled>
+                </div>
+                <div class="auth-row">
+                    <div data-key="auth_multi">Multi-Sig Onayı (2/3)</div><input type="checkbox" checked disabled><input type="checkbox" checked><input type="checkbox" disabled>
+                </div>
+            </div>
+        </div>
+
+        <div id="ai_analyst" class="tab-content">
+            <button class="save-btn" style="margin-top:0; border-color:var(--cyan); color:var(--cyan);" onclick="runAI()" data-key="btn_ai">STRATEJİK AI ANALİZİNİ BAŞLAT</button>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px; margin-top:25px;">
+                <textarea id="ai_output" rows="10" readonly data-key="ph_ai_wait" placeholder="Analiz raporu bekleniyor..."></textarea>
+                <textarea id="analyst_notes" rows="10" data-key="ph_notes" placeholder="Analist özel notları..."></textarea>
+            </div>
+        </div>
+
+        <button class="save-btn" onclick="saveToMemory()" id="main_save_btn" data-key="btn_save">TÜM STRATEJİK DNA KATMANLARINI MÜHÜRLE</button>
+                <div style="padding:40px; border-top:1px solid var(--gold); background:rgba(0,0,0,0.6);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+                <h3 style="color:var(--gold); font-size:12px; letter-spacing:4px;" data-key="title_vault">MÜHÜRLÜ DNA VERİTABANI</h3>
+                <input type="text" id="vault_search" data-key="ph_search" placeholder="İsim, Sicil veya Ünite ile Sorgula..." style="width:350px;" oninput="renderList(this.value)">
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th width="15%" data-key="th_sicil">SİCİL</th>
+                        <th width="35%" data-key="th_name">AD SOYAD</th>
+                        <th width="20%" data-key="th_unit">BİRİM / ÜNİTE</th>
+                        <th width="30%" data-key="th_actions">İŞLEMLER</th>
+                    </tr>
+                </thead>
+                <tbody id="emp_list_body"></tbody>
+            </table>
+        </div>
+
+        <div style="padding:40px; border-top:1px solid var(--gold); background:rgba(0,0,0,0.8);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+                <h3 style="color:var(--cyan); font-size:12px; letter-spacing:4px;" data-key="title_sgk_inventory">KURUMSAL SGK VE EMEKLİLİK ENVANTERİ (ÖZET TABLO)</h3>
+            </div>
+            <div style="overflow-x:auto;">
+                <table class="data-table" style="min-width: 1200px;">
+                    <thead>
+                        <tr>
+                            <th width="8%" data-key="th_sicil">SİCİL</th>
+                            <th width="15%" data-key="th_name">AD SOYAD</th>
+                            <th width="12%" data-key="th_sgk_fiili">FİİLİ GİRİŞ</th>
+                            <th width="10%" data-key="th_4a">4/A GÜN</th>
+                            <th width="10%" data-key="th_4b">4/B GÜN</th>
+                            <th width="10%" data-key="th_total_days">TOPLAM GÜN</th>
+                            <th width="20%" data-key="th_eyt_stat">EYT / KADEME DURUMU</th>
+                            <th width="15%" data-key="th_target_year">HEDEF YIL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sgk_inventory_body"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="dictionary.js"></script>
+    <script src="hr-storage.js"></script>
+    <script>
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = () => { window.history.pushState(null, null, window.location.href); };
+
+        function formatDate(input) {
+            let v = input.value.replace(/\D/g, '');
+            if (v.length > 8) v = v.substring(0, 8);
+            if (v.length >= 5) {
+                input.value = v.substring(0, 2) + '.' + v.substring(2, 4) + '.' + v.substring(4, 8);
+            } else if (v.length >= 3) {
+                input.value = v.substring(0, 2) + '.' + v.substring(2, 4);
+            } else {
+                input.value = v;
+            }
+        }
+
+        const modules = [
+            { id: 'family', body: 'body_family', head: 'head_family', cols: [{ k: 'th_rel', t: 'YAKINLIK' }, { k: 'th_name', t: 'AD SOYAD' }, { k: 'th_job', t: 'MESLEK' }, { k: 'th_income', t: 'GELİR' }, { k: 'th_risk', t: 'RİSK' }] },
+            { id: 'finance', body: 'body_finance', head: 'head_finance', cols: [{ k: 'th_asset', t: 'VARLIK/BORÇ' }, { k: 'th_amount', t: 'TUTAR' }, { k: 'th_inst', t: 'KURUM' }, { k: 'th_term', t: 'VADE' }, { k: 'th_score', t: 'SKOR' }] },
+            { id: 'health', body: 'body_health', head: 'head_health', cols: [{ k: 'th_diag', t: 'TANI' }, { k: 'th_med', t: 'İLAÇ' }, { k: 'th_date', t: 'TARİH' }, { k: 'th_psy', t: 'PSİKO-DURUM' }, { k: 'th_note', t: 'NOT' }] }
+        ];
+
+        modules.forEach(mod => {
+            const div = document.createElement('div'); div.id = mod.id; div.className = 'tab-content';
+            div.innerHTML = `
+            <div style="margin-bottom:15px; display:flex; gap:12px;">
+                <button class="sm-btn" style="color:var(--gold); border-color:var(--gold);" onclick="addRow('${mod.body}')" data-key="btn_row">+ SATIR EKLE</button>
+                <button class="sm-btn" style="color:var(--cyan); border-color:var(--cyan);" onclick="addColumn('${mod.head}', '${mod.body}')" data-key="btn_col">+ SÜTUN EKLE</button>
+            </div>
+            <table class="data-table"><thead id="${mod.head}"><tr>${mod.cols.map(c => `<th data-key="${c.k}">${c.t}</th>`).join('')}</tr></thead><tbody id="${mod.body}"></tbody></table>`;
+            document.getElementById('dynamic-sections').appendChild(div);
+            applyLang();
+        });
+
+        function addRow(id) {
+            const row = document.getElementById(id).insertRow();
+            const cols = document.getElementById(id).closest('table').querySelector('thead tr').cells.length;
+            for (let i = 0; i < cols; i++) row.insertCell().innerHTML = `<input type="text">`;
+            applyLang();
+        }
+
+        function setLang(l) { localStorage.setItem('FY_LANG', l); applyLang(); renderList(); }
+
+        function applyLang() {
+            const lang = localStorage.getItem('FY_LANG') || 'tr';
+            if (typeof FY_DICTIONARY === 'undefined') return;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const k = el.getAttribute('data-key');
+                if (FY_DICTIONARY[k] && FY_DICTIONARY[k][lang]) {
+                    const text = FY_DICTIONARY[k][lang];
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') { el.placeholder = text; }
+                    else { el.innerHTML = text; }
+                }
+            });
+            document.querySelectorAll('.l-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === lang));
+        }
+
+        function checkTC(tc) {
+            if (tc.length === 11) {
+                const emp = (typeof FOR_YOU_STORAGE !== 'undefined') ? FOR_YOU_STORAGE.getDNA().find(e => e.tcNo === tc) : null;
+                if (emp) { updateAlert('stat_found', 'var(--cyan)'); prepareEdit(tc); }
+                else { updateAlert('stat_not_found', 'var(--gold)'); }
+            } else { updateAlert('stat_ready', 'var(--gold)'); }
+        }
+
+        function updateAlert(key, color) {
+            const el = document.getElementById('status_alert');
+            const lang = localStorage.getItem('FY_LANG') || 'tr';
+            if (typeof FY_DICTIONARY !== 'undefined' && FY_DICTIONARY[key]) el.innerText = FY_DICTIONARY[key][lang];
+            el.style.color = color;
+        }
+
+        function saveToMemory() {
+            const lang = localStorage.getItem('FY_LANG') || 'tr';
+            const data = {
+                tcNo: document.getElementById('m_tc').value, name: document.getElementById('m_name').value,
+                jobCode: document.getElementById('m_jobCode').value, phone: document.getElementById('m_phone').value,
+                email: document.getElementById('m_email').value, unit: document.getElementById('m_unit').value,
+                title: document.getElementById('m_title').value, sicil: document.getElementById('m_sicil').value,
+                dob: document.getElementById('m_dob').value, sgkStaj: document.getElementById('m_sgkStaj').value,
+                sgkEntry: document.getElementById('m_entryDate').value, days4A: document.getElementById('m_days4A').value,
+                days4B: document.getElementById('m_days4B').value, days4C: document.getElementById('m_days4C').value,
+                son4A: document.getElementById('m_son4A').value, son4B: document.getElementById('m_son4B').value,
+                son4C: document.getElementById('m_son4C').value, borcAsker: document.getElementById('m_borcAsker').value,
+                borcDogum: document.getElementById('m_borcDogum').value, borcYurt: document.getElementById('m_borcYurt').value,
+                retirePref: document.getElementById('m_retirePref').value
+            };
+
+            if (data.tcNo.length !== 11) { alert(lang === 'tr' ? "SİSTEM UYARISI: TC Kimlik 11 hane olmalıdır!" : "SYSTEM ALERT: ID must be 11 digits!"); return; }
+            if (typeof FOR_YOU_STORAGE === 'undefined') { alert("Depolama motoru bulunamadı!"); return; }
+
+            const finalSicil = FOR_YOU_STORAGE.upsertEmployee(data);
+            alert(lang === 'tr' ? "✅ DNA BAŞARIYLA MÜHÜRLENDİ: " + finalSicil : "✅ DNA SEALED SUCCESSFULLY: " + finalSicil);
+            resetSystem(); renderList(); applyLang();
+        }
+
+        function resetSystem() {
+            document.querySelectorAll('.iso-grid input').forEach(input => input.value = "");
+            document.getElementById('m_unit').value = ""; document.getElementById('ai_tahsis_out').value = "";
+            document.querySelectorAll('tbody[id^="body_"]').forEach(tbody => { tbody.innerHTML = ""; for (let i = 0; i < 3; i++) addRow(tbody.id); });
+            updateAlert('stat_ready', 'var(--gold)'); document.getElementById('m_tc').focus(); applyLang();
+        }
+
+        function renderList(f = '') {
+            const tbody = document.getElementById('emp_list_body'); tbody.innerHTML = '';
+            const sgkTbody = document.getElementById('sgk_inventory_body'); sgkTbody.innerHTML = '';
+            const lang = localStorage.getItem('FY_LANG') || 'tr';
+            const vault = (typeof FOR_YOU_STORAGE !== 'undefined') ? FOR_YOU_STORAGE.getDNA() : [];
+
+            vault.filter(e => e.name.toLowerCase().includes(f.toLowerCase()) || e.sicil.toLowerCase().includes(f.toLowerCase()) || (e.unit && e.unit.toLowerCase().includes(f.toLowerCase()))).forEach(emp => {
+                const editTxt = (typeof FY_DICTIONARY !== 'undefined' && FY_DICTIONARY.btn_edit) ? FY_DICTIONARY.btn_edit[lang] : "DÜZENLE";
+                const delTxt = (typeof FY_DICTIONARY !== 'undefined' && FY_DICTIONARY.btn_del) ? FY_DICTIONARY.btn_del[lang] : "SİL";
+
+                tbody.innerHTML += `<tr><td style="color:var(--cyan); font-weight:bold;">${emp.sicil}</td><td style="color:var(--gold); font-weight:bold;">${emp.name}</td><td>${emp.unit || '---'}</td><td><button class="sm-btn" style="color:var(--cyan);" onclick="prepareEdit('${emp.tcNo}')">${editTxt}</button> <button class="sm-btn" style="color:var(--red);" onclick="deleteDNA('${emp.tcNo}')">${delTxt}</button></td></tr>`;
+
+                let totalDays = (parseInt(emp.days4A) || 0) + (parseInt(emp.days4B) || 0) + (parseInt(emp.days4C) || 0);
+                let eytStat = (emp.sgkEntry && (emp.sgkEntry.includes('199') && parseInt(emp.sgkEntry.split('.')[2]) <= 1999)) ? '<span style="color:var(--gold)">EYT KAPSAMINDA</span>' : 'KADEME (KAPSAM DIŞI)';
+                let targetYear = (parseInt((emp.sgkEntry || "01.01.2000").split('.')[2]) || 2000) + 25;
+
+                sgkTbody.innerHTML += `<tr><td style="color:var(--cyan); font-weight:bold;">${emp.sicil}</td><td style="font-weight:bold;">${emp.name}</td><td style="color:var(--gold);">${emp.sgkEntry || '---'}</td><td>${emp.days4A || '0'}</td><td>${emp.days4B || '0'}</td><td><strong style="color:var(--cyan);">${totalDays}</strong></td><td>${eytStat}</td><td>~${targetYear}</td></tr>`;
+            });
+            applyLang();
+        }
+
+        function prepareEdit(tc) {
+            const emp = FOR_YOU_STORAGE.getDNA().find(e => e.tcNo === tc); if (!emp) return;
+            document.getElementById('m_tc').value = emp.tcNo; document.getElementById('m_name').value = emp.name;
+            document.getElementById('m_sicil').value = emp.sicil; document.getElementById('m_jobCode').value = emp.jobCode || '';
+            document.getElementById('m_unit').value = emp.unit || ''; document.getElementById('m_title').value = emp.title || '';
+            document.getElementById('m_phone').value = emp.phone || ''; document.getElementById('m_email').value = emp.email || '';
+            document.getElementById('m_dob').value = emp.dob || ''; document.getElementById('m_sgkStaj').value = emp.sgkStaj || '';
+            document.getElementById('m_entryDate').value = emp.sgkEntry || ''; document.getElementById('m_days4A').value = emp.days4A || '';
+            document.getElementById('m_days4B').value = emp.days4B || ''; document.getElementById('m_days4C').value = emp.days4C || '';
+            document.getElementById('m_son4A').value = emp.son4A || ''; document.getElementById('m_son4B').value = emp.son4B || '';
+            document.getElementById('m_son4C').value = emp.son4C || ''; document.getElementById('m_borcAsker').value = emp.borcAsker || '';
+            document.getElementById('m_borcDogum').value = emp.borcDogum || ''; document.getElementById('m_borcYurt').value = emp.borcYurt || '';
+            document.getElementById('m_retirePref').value = emp.retirePref || 'tam';
+            openTab(null, 'core'); document.getElementById('m_tc').focus(); applyLang();
+        }
+
+        function deleteDNA(tc) {
+            const lang = localStorage.getItem('FY_LANG') || 'tr';
+            if (confirm(lang === 'tr' ? "DİKKAT! Kalıcı silme. Onaylıyor musunuz?" : "WARNING! Permanent deletion. Confirm?")) { FOR_YOU_STORAGE.deleteEmployee(tc); renderList(); resetSystem(); applyLang(); }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault(); e.currentTarget.style.borderColor = 'var(--gold)';
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) simulateOCR(e.dataTransfer.files[0]);
+        }
+
+        function simulateOCR(file) {
+            if (!file) return;
+            const out = document.getElementById('ai_tahsis_out');
+            const lang = localStorage.getItem('FY_LANG') || 'tr';
+            out.value = `> [${file.name}] Taranıyor... Optik Karakter Tanıma (OCR) Devrede...\n`;
+            setTimeout(() => {
+                document.getElementById('m_sgkStaj').value = "15.06.1996"; document.getElementById('m_entryDate').value = "08.09.1999";
+                document.getElementById('m_days4A').value = "5400"; document.getElementById('m_son4A').value = "1069";
+                out.value += lang === 'tr' ? `> ✅ TARAMA BAŞARILI: Veriler eklendi. Tahsis Motorunu Çalıştırın.` : `> ✅ SUCCESS: Data extracted. Run Allocation Engine.`;
+                applyLang();
+            }, 1500);
+        }
+
+        function simulateTahsisAI() {
+            const entry = document.getElementById('m_entryDate').value;
+            const d4A = parseInt(document.getElementById('m_days4A').value) || 0;
+            const d4B = parseInt(document.getElementById('m_days4B').value) || 0;
+            const d4C = parseInt(document.getElementById('m_days4C').value) || 0;
+            const borcAsker = parseInt(document.getElementById('m_borcAsker').value) || 0;
+            const son4A = parseInt(document.getElementById('m_son4A').value) || 0;
+            const son4B = parseInt(document.getElementById('m_son4B').value) || 0;
+            const son4C = parseInt(document.getElementById('m_son4C').value) || 0;
+            const out = document.getElementById('ai_tahsis_out');
+            const lang = localStorage.getItem('FY_LANG') || 'tr';
+
+            out.value = lang === 'tr' ? "> Tüm Kurumlar İçin Derin SGK Tahsis Rotaları Hesaplanıyor...\n" : "> Calculating Deep SGK Allocation Routes for All Institutions...\n";
+
+            setTimeout(() => {
+                let totalSon = son4A + son4B + son4C;
+                if (totalSon > 2520) {
+                    out.value = lang === 'tr' ? "⚠️ HATA: Son 7 yıl prim günleri toplamı 2520'yi geçemez!" : "⚠️ ERROR: Total of last 7 years cannot exceed 2520 days!";
+                    applyLang();
+                    return;
+                }
+
+                let totalDays = d4A + d4B + d4C + borcAsker;
+
+                let eytStatus = false;
+                let eytMsg = "KADEME KAPSAMINDA (Kadın 58, Erkek 60 Yaş Şartına Tabi)";
+                if (entry) {
+                    let p = entry.split('.');
+                    if (p.length === 3) {
+                        let year = parseInt(p[2]), month = parseInt(p[1]), day = parseInt(p[0]);
+                        let entryDate = new Date(year, month - 1, day);
+                        if (entryDate <= new Date(1999, 8, 8)) {
+                            eytStatus = true;
+                            eytMsg = "🔥 EYT KAPSAMINDA (Yaş Şartı Aranmaz, Sadece Prim ve Sigortalılık Yılı Geçerli)";
+                        } else if (year >= 2008 && month >= 5) {
+                            eytMsg = "YENİ YASA KAPSAMI (65 Yaş Kademesi. 1260 Kuralı Geçersiz, Tüm Hayat Primi Geçerli)";
+                        }
+                    }
+                } else { eytMsg = "GİRİŞ TARİHİ GİRİLMEDİ (EYT Analizi Yapılamadı)"; }
+
+                let need4A = 1261 - son4A; if (need4A < 0) need4A = 0;
+                let need4B = 1261 - son4B; if (need4B < 0) need4B = 0;
+                let need4C = 1261 - son4C; if (need4C < 0) need4C = 0;
+
+                let sskTarget = eytStatus ? "5000-5975 Gün" : "7000 Gün ve Yaş Şartı";
+                let otherTarget = eytStatus ? "Erkek 9000 / Kadın 7200 Gün" : "9000 Gün ve Yaş Şartı";
+
+                let msg4A = need4A === 0
+                    ? `✅ BAŞARILI: SSK (4/A) 1261 gün kuralını tamamladınız. Toplam prim: ${totalDays}. Hedef: ${sskTarget}.`
+                    : `⚠️ EKSİK: SSK'dan emeklilik için SON 3.5 YIL KURALINDA [ ${need4A} GÜN ] eksiğiniz var. Çözüm: Hemen bir işyerinde 4/A statüsünde kesintisiz ${need4A} gün çalışırsanız yaşa takılmadan SSK'dan emekli olursunuz.`;
+
+                let msg4B = need4B === 0
+                    ? `✅ BAŞARILI: Bağ-Kur (4/B) 1261 gün kuralını tamamladınız. Toplam prim: ${totalDays}. Hedef: ${otherTarget}.`
+                    : `⚠️ EKSİK: Bağ-Kur'dan emeklilik için SON 3.5 YIL KURALINDA [ ${need4B} GÜN ] eksiğiniz var. Çözüm: Şirket ortaklığı veya isteğe bağlı sigorta ile ${need4B} gün Bağ-Kur ödemelisiniz. (Not: Bağ-Kur'un toplam gün şartı SSK'dan çok daha ağırdır).`;
+
+                let msg4C = need4C === 0
+                    ? `✅ BAŞARILI: Emekli Sandığı (4/C) 1261 gün kuralını tamamladınız. Toplam prim: ${totalDays}. Hedef: ${otherTarget}.`
+                    : `⚠️ EKSİK: Emekli Sandığı'ndan emeklilik için SON 3.5 YIL KURALINDA [ ${need4C} GÜN ] eksiğiniz var. Çözüm: Memuriyet kadrosunda ${need4C} gün hizmet vermeniz gerekmektedir.`;
+
+                let finalMsgTR = `=== FOR YOU | UZMAN SGK TAHSİS VE GPS RAPORU ===\n\n` +
+                    `1️⃣ YASAL KAPSAM VE E.Y.T. DURUMU:\n👉 ${eytMsg}\n\n` +
+                    `2️⃣ KURUM BAZLI KURTULUŞ REÇETESİ (TÜM İHTİMALLER):\n\n` +
+                    `[ SSK (4/A) SENARYOSU ] (En Avantajlı)\n${msg4A}\n\n` +
+                    `[ BAĞ-KUR (4/B) SENARYOSU ]\n${msg4B}\n\n` +
+                    `[ EMEKLİ SANDIĞI (4/C) SENARYOSU ]\n${msg4C}\n\n` +
+                    `3️⃣ BAŞ MİMARIN STRATEJİK TAVSİYESİ:\nSistemin hesaplamasına göre SSK (4/A) statüsü her zaman en erken emeklilik yoludur. Eğer SSK'da eksik gününüz (Örn: ${need4A} gün) varsa, diğer statüleri bırakıp derhal 4/A olarak prim yatırmaya başlayın.`;
+
+                out.value = lang === 'tr' ? finalMsgTR : ">>> ALLOCATION REPORT RUNNING... SWITCH TO TR FOR DETAILED SGK ANALYSIS.";
+                applyLang();
+            }, 1200);
+        }
+
+        function openTab(evt, name) {
+            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+            document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(name).style.display = 'block';
+            if (evt) evt.currentTarget.classList.add('active');
+            else { const btn = document.querySelector(`[onclick*="${name}"]`); if (btn) btn.classList.add('active'); }
+            applyLang();
+        }
+
+        function runAI() {
+            document.getElementById('ai_output').value = "🔍 SİSTEM ANALİZİ BAŞLADI...\n✓ Kripto Protokoller: AKTİF\n✓ Birim Performansı: YÜKSEK\n✓ SGK Senkronizasyonu: KUSURSUZ";
+            applyLang();
+        }
+
+        window.onload = () => { 
+            applyLang(); 
+            renderList(); 
+            document.querySelectorAll('tbody[id^="body_"]').forEach(tbody => { for (let i = 0; i < 3; i++) addRow(tbody.id); }); 
+            document.getElementById('m_tc').focus(); 
+        };
+    </script>
+</body>
+
+</html>

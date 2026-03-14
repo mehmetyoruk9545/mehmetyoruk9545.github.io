@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOR YOU | ADMIN HQ - Global Command Center v4.7</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --gold: #d4af37; --bg-dark: #020205; --neon-blue: #00ffff; 
+            --neon-red: #ff3333; --neon-green: #39ff14; --glass: rgba(10, 10, 15, 0.95); 
+        }
+        
+        body { margin: 0; padding: 0; background: var(--bg-dark); color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+
+        .admin-bg { position: fixed; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #0a1128 0%, #020205 100%); }
+
+        .container { display: grid; grid-template-columns: 320px 1fr 350px; height: 100vh; gap: 1px; background: rgba(212, 175, 55, 0.15); }
+
+        /* SOL PANEL: DNA HÜCRESİ */
+        .sidebar { background: var(--bg-dark); padding: 25px; display: flex; flex-direction: column; gap: 15px; border-right: 1px solid rgba(212, 175, 55, 0.1); }
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 10px; }
+        .sidebar-header h2 { color: var(--gold); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin: 0; }
+        
+        .btn-add-dna { background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); color: var(--gold); border-radius: 5px; width: 25px; height: 25px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        .btn-add-dna:hover { background: var(--gold); color: #000; box-shadow: 0 0 10px var(--gold); }
+
+        #staff_list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 5px; }
+        .staff-card { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border-left: 3px solid #333; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
+        .staff-card.active { border-left-color: var(--neon-blue); background: rgba(0, 255, 255, 0.05); }
+
+        /* ORTA PANEL */
+        .main-ops { padding: 30px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        .ops-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
+        .ops-title h1 { margin: 0; font-family: 'Playfair Display', serif; font-weight: 300; letter-spacing: 3px; font-size: 24px; text-transform: uppercase; }
+        .clock-box { text-align: right; }
+        #clock { color: var(--gold); font-size: 20px; letter-spacing: 2px; }
+
+        /* RADAR VE İSTATİSTİK */
+        .live-map { height: 160px; background: rgba(0,0,0,0.6); border: 1px solid rgba(212, 175, 55, 0.1); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: 0.5s; flex-shrink: 0; }
+        .live-map.red-alert { border-color: var(--neon-red); box-shadow: inset 0 0 50px rgba(255, 51, 51, 0.2); animation: pulseRed 2s infinite; }
+        @keyframes pulseRed { 0% { box-shadow: inset 0 0 20px rgba(255,51,51,0.2); } 50% { box-shadow: inset 0 0 80px rgba(255,51,51,0.5); } 100% { box-shadow: inset 0 0 20px rgba(255,51,51,0.2); } }
+        
+        .map-overlay { color: rgba(255,255,255,0.03); font-size: 50px; font-weight: 900; letter-spacing: 15px; position: absolute; pointer-events: none; }
+        .radar { width: 100px; height: 100px; border: 1px solid var(--neon-blue); border-radius: 50%; position: relative; animation: radar-spin 4s linear infinite; background: radial-gradient(circle, rgba(0, 255, 255, 0.1), transparent); }
+        @keyframes radar-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .stat-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; flex-shrink: 0; }
+        .stat-card { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .stat-val { font-size: 20px; color: var(--gold); margin-top: 5px; font-family: 'Playfair Display', serif; }
+
+        /* LOGLAR */
+        .signal-queue { display: flex; flex-direction: column; gap: 10px; flex: 1; overflow-y: auto; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; padding-right: 5px; }
+        .signal-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .signal-card.danger { border-color: var(--neon-red); background: rgba(255, 51, 51, 0.05); }
+        .signal-card.pending { border-color: var(--gold); background: rgba(212, 175, 55, 0.05); }
+        .signal-card.info { border-color: var(--neon-blue); }
+        
+        .btn-action { background: rgba(0,0,0,0.5); border: 1px solid var(--gold); color: var(--gold); padding: 8px 12px; border-radius: 5px; font-size: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .btn-action:hover { background: var(--gold); color: #000; }
+
+        /* SAĞ PANEL */
+        .right-panel { background: var(--bg-dark); padding: 25px; display: flex; flex-direction: column; gap: 15px; border-left: 1px solid rgba(212, 175, 55, 0.1); }
+        
+        .ai-strategist { background: var(--glass); border: 1px solid var(--neon-blue); border-radius: 12px; display: flex; flex-direction: column; flex: 1; min-height: 250px; overflow: hidden; }
+        .ai-head { padding: 12px; background: rgba(0, 255, 255, 0.05); font-size: 10px; letter-spacing: 2px; color: var(--neon-blue); border-bottom: 1px solid rgba(0, 255, 255, 0.1); display: flex; justify-content: space-between; }
+        .ai-chat { flex: 1; padding: 15px; font-size: 11px; overflow-y: auto; color: #ccc; line-height: 1.6; }
+        
+        .ai-input-group { display: flex; border-top: 1px solid rgba(255,255,255,0.1); }
+        .ai-field { flex: 1; background: none; border: none; padding: 12px; color: #fff; font-size: 11px; outline: none; font-family: 'Inter', sans-serif;}
+        .ai-btn { background: var(--neon-blue); border: none; color: #000; padding: 0 20px; cursor: pointer; font-weight: bold; }
+
+        .module-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+        .mod-btn { background: linear-gradient(to right, rgba(212,175,55,0.1), transparent); border: 1px solid rgba(212,175,55,0.3); color: #fff; padding: 10px; border-radius: 8px; text-decoration: none; font-size: 9px; letter-spacing: 1px; transition: 0.3s; }
+        .mod-btn:hover { border-color: var(--gold); padding-left: 15px; }
+
+        /* MODAL */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        .modal-content { background: var(--bg-dark); border: 1px solid var(--gold); padding: 30px; border-radius: 15px; width: 450px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 0 50px rgba(212, 175, 55, 0.2); }
+        .modal-title { font-size: 12px; color: var(--gold); letter-spacing: 4px; text-transform: uppercase; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 10px; margin-bottom: 5px; }
+        
+        .input-box { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px; border-radius: 5px; font-size: 11px; outline: none; font-family: 'Inter', sans-serif; text-transform: uppercase; width: 100%; box-sizing: border-box;}
+        .input-box:focus { border-color: var(--gold); }
+        .input-box::placeholder { color: #555; }
+
+        .btn-submit { background: var(--gold); color: #000; border: none; padding: 12px; border-radius: 5px; font-size: 10px; font-weight: bold; cursor: pointer; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; }
+        .btn-cancel { background: transparent; color: #888; border: 1px solid #888; padding: 10px; border-radius: 5px; font-size: 10px; cursor: pointer; letter-spacing: 2px; text-transform: uppercase; }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); }
+    </style>
+</head>
+<body>
+
+    <div class="admin-bg"></div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2 data-key="lbl_unit">OPERASYON TİMİ (CANLI DNA)</h2>
+                <button class="btn-add-dna" onclick="openAddModal()" title="Kripto Personel Ekle">+</button>
+            </div>
+            <div id="staff_list"></div>
+            <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                <div style="font-size: 9px; color: var(--neon-blue); letter-spacing: 1px;">SİSTEM: ZERO-TRUST V4.5</div>
+                <button class="btn-action" style="border-color:#555; color:#888;" onclick="FOR_YOU_STORAGE.exportDatabase()" data-key="nav_exit">FİZİKSEL YEDEK AL</button>
+            </div>
+        </div>
+
+        <div class="main-ops">
+            <div class="ops-header">
+                <div class="ops-title">
+                    <span style="color:var(--gold); font-size:10px; letter-spacing:5px;">FOR YOU GLOBAL HQ</span>
+                    <h1 data-key="nav_hq">YÖNETİM KONSOLU</h1>
+                </div>
+                <div class="clock-box">
+                    <div id="clock">00:00:00</div>
+                    <select id="lang_selector" onchange="setLang(this.value)" style="background:none; border:none; color:var(--gold); font-size:10px; cursor:pointer; margin-top:5px; outline:none;">
+                        <option value="tr">TR</option><option value="en">EN</option>
+                        <option value="ru">RU</option><option value="zh">ZH</option>
+                        <option value="ar">AR</option><option value="de">DE</option>
+                        <option value="fr">FR</option><option value="es">ES</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="live-map" id="main_radar">
+                <div class="map-overlay">FOR YOU</div>
+                <div class="radar"></div>
+                <div style="position: absolute; bottom: 15px; font-size: 10px; letter-spacing: 3px; color: var(--neon-blue);" data-key="stat_ready">TARANIYOR: SİNAPSLAR VE HÜCRELER</div>
+                <div style="position: absolute; top: 10px; right: 10px; display: gap: 5px;">
+                    <button onclick="testMultiSig()" style="background:none; border:none; color:#555; cursor:pointer; font-size:8px;">[TEST: MULTI-SIG]</button>
+                    <button onclick="testRedCode()" style="background:none; border:none; color:#555; cursor:pointer; font-size:8px;">[TEST: KIRMIZI KOD]</button>
+                </div>
+            </div>
+
+            <div class="stat-bar">
+                <div class="stat-card">
+                    <div data-key="lbl_vips" style="font-size:9px; opacity:0.6;">AKTİF VIP TALEBİ</div>
+                    <div class="stat-val" style="color:var(--neon-blue);" id="stat_vips">4</div>
+                </div>
+                <div class="stat-card">
+                    <div data-key="lbl_risk" style="font-size:9px; opacity:0.6;">SİBER RİSK ANALİZİ</div>
+                    <div class="stat-val" style="color:var(--neon-red);" id="stat_risk" data-key="stat_zero_trust">Sıfır-Güven Devrede</div>
+                </div>
+                <div class="stat-card">
+                    <div data-key="lbl_wealth" style="font-size:9px; opacity:0.6;">YÖNETİLEN VARLIK</div>
+                    <div class="stat-val" id="stat_wealth">$1.2B</div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 5px;">
+                <div style="font-size: 10px; color: var(--gold); letter-spacing: 3px;" data-key="title_vault">KIRMIZI BÜLTEN & SİNYALLER (CANLI)</div>
+                <button onclick="loadSignals()" style="background:none; border:none; color:var(--neon-blue); cursor:pointer; font-size:10px;" data-key="btn_update">GÜNCELLE ⟳</button>
+            </div>
+            
+            <div class="signal-queue" id="signal_area"></div>
+        </div>
+
+        <div class="right-panel">
+            <h2 data-key="tab_ai" style="color: var(--gold); font-size: 11px; letter-spacing: 4px; margin: 0;">STRATEJİK ANALİZ (AI)</h2>
+            <div class="ai-strategist" id="ai_box">
+                <div class="ai-head">
+                    <span id="ai_header_text">FOR YOU AI STRATEGIST</span>
+                    <span id="ai_status" style="color:var(--neon-green)">● ONLINE</span>
+                </div>
+                <div class="ai-chat" id="admin_chat_box">
+                    Büyük Mimar Mehmet Bey, Karargaha hoş geldiniz. Tarayıcı kilidi devrededir. Olası bir şifre sıfırlama talebi geldiğinde "Gelen Sinyaller" ağından onaylayabilirsiniz.
+                </div>
+                <div class="ai-input-group">
+                    <input type="text" id="admin_ai_input" class="ai-field" data-key="ph_ai_wait" placeholder="Kriz/Strateji senaryosu girin..." onkeypress="if(event.key==='Enter') runStratejist()">
+                    <button class="ai-btn" onclick="runStratejist()">➜</button>
+                </div>
+            </div>
+
+            <h2 data-key="nav_home" style="color: var(--gold); font-size: 11px; letter-spacing: 4px; margin: 0;">SİSTEM MODÜLLERİ</h2>
+            <div class="module-grid">
+                <a href="gateway.html" class="mod-btn" style="border-color: #555; color: #888;" data-key="nav_exit">GÜVENLİ ÇIKIŞ (GATEWAY)</a>
+                <a href="hr-master-dna.html" class="mod-btn" style="border-color: var(--neon-blue); color: var(--neon-blue);" data-key="tab_core">AMİRAL GEMİSİ (DNA MASTER)</a>
+                <a href="hr-performance-hq.html" class="mod-btn" data-key="lbl_unit">PERSONEL HÜCRE PANELİ</a>
+                <a href="vip-client-hq.html" class="mod-btn" data-key="nav_hq">VIP MÜŞTERİ RADARI</a>
+                <a href="vip-legacy-hq.html" class="mod-btn" data-key="tab_family">MİRAS ODASI</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="dna_modal">
+        <div class="modal-content">
+            <div class="modal-title" data-key="title_auth">YENİ KRİPTOGRAFİK DNA OLUŞTUR</div>
+            <input type="text" id="new_name" class="input-box" data-key="ph_name" placeholder="PERSONEL ADI SOYADI">
+            <input type="text" id="new_tc" class="input-box" data-key="ph_tc" placeholder="TC KİMLİK (11 HANE)" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            <input type="text" id="new_job" class="input-box" data-key="ph_job" placeholder="MESLEK KODU (ÖRN: GUV, HUK)">
+            <input type="text" id="new_cell" class="input-box" data-key="ph_unit" placeholder="HÜCRE (ÖRN: HÜCRE-01)">
+            <select id="new_level" class="input-box" style="background: #000; color: #fff;">
+                <option value="1">LEVEL 1 (MİMAR)</option>
+                <option value="2">LEVEL 2 (YÖNETİCİ)</option>
+                <option value="3" selected>LEVEL 3 (ASİL)</option>
+            </select>
+            <button class="btn-submit" onclick="submitNewDNA()" data-key="btn_save">DNA'YI SİSTEME MÜHÜRLE</button>
+            <button class="btn-cancel" onclick="closeAddModal()" data-key="btn_del">İPTAL ET</button>
+        </div>
+    </div>
+
+<script src="dictionary.js"></script>
+<script src="hr-storage.js"></script>
+<script>
+    const GEMINI_KEY = "AIzaSyBl3TSQ6VZx-CpJpyzki5-54FVfc5poDOc"; 
+
+    // 🔒 TARAYICI FELCİ
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () { history.go(1); alert("GÜVENLİK İHLALİ: Karargahta geri gidilemez!"); };
+
+    // 🌍 EVRENSEL DİL MOTORU
+    function setLang(l) { 
+        localStorage.setItem('FY_LANG', l); 
+        applyLang(); 
+        syncAdminDNA(); 
+        loadSignals(); 
+    }
+
+    function applyLang() {
+        const lang = localStorage.getItem('FY_LANG') || 'tr';
+        if (typeof FY_DICTIONARY === 'undefined') return;
+        
+        document.querySelectorAll('[data-key]').forEach(el => {
+            const k = el.getAttribute('data-key');
+            if (FY_DICTIONARY[k] && FY_DICTIONARY[k][lang]) {
+                const text = FY_DICTIONARY[k][lang];
+                if (el.tagName === 'INPUT') el.placeholder = text;
+                else el.innerHTML = text;
+            }
+        });
+        document.getElementById('lang_selector').value = lang;
+    }
+
+    function syncAdminDNA() {
+        const listDiv = document.getElementById('staff_list');
+        listDiv.innerHTML = "";
+        const employees = FOR_YOU_STORAGE.getDNA();
+        const lang = localStorage.getItem('FY_LANG') || 'tr';
+        
+        if (employees.length === 0) {
+            listDiv.innerHTML = `<div style='color:#555; font-size:10px;' data-key="lbl_staff_list">Kayıtlı DNA bulunamadı.</div>`;
+            applyLang();
+            return;
+        }
+
+        employees.forEach(emp => {
+            const card = document.createElement('div');
+            card.className = "staff-card";
+            card.innerHTML = `
+                <div style="display:flex; justify-content:space-between;">
+                    <b data-key="lbl_name">${emp.name}</b>
+                    <span style="color:var(--neon-blue); font-size:9px;">${emp.sicil || 'SİCİLSİZ'}</span>
+                </div>
+                <div style="font-size:9px; color:#888;" data-key="lbl_unit">${emp.cellUnit || 'ÜNİTE-01'} | YETKİ: L${emp.authLevel || 3}</div>
+            `;
+            listDiv.appendChild(card);
+        });
+        applyLang();   // ← KRİTİK: Render sonrası dil uygula
+    }
+
+    function openAddModal() { document.getElementById('dna_modal').style.display = 'flex'; }
+    function closeAddModal() { document.getElementById('dna_modal').style.display = 'none'; }
+
+    function submitNewDNA() {
+        const data = {
+            name: document.getElementById('new_name').value,
+            tcNo: document.getElementById('new_tc').value,
+            jobCode: document.getElementById('new_job').value,
+            cellUnit: document.getElementById('new_cell').value,
+            authLevel: document.getElementById('new_level').value
+        };
+        if(!data.name || data.tcNo.length !== 11) { alert("GEÇERSİZ VERİ!"); return; }
+        FOR_YOU_STORAGE.upsertEmployee(data);
+        alert("DNA SİSTEME MÜHÜRLENDİ!");
+        closeAddModal();
+        syncAdminDNA();
+    }
+
+    function loadSignals() {
+        const area = document.getElementById('signal_area');
+        area.innerHTML = "";
+        const logs = FOR_YOU_STORAGE.getSecurityLogs().reverse();
+        
+        if (logs.length === 0) {
+            area.innerHTML = `<div style='text-align:center; color:#444; font-size:10px; padding:20px;' data-key="lbl_no_signal">Temiz Hat. Sinyal Yok.</div>`;
+            applyLang();
+            return;
+        }
+
+        logs.forEach(log => {
+            const card = document.createElement('div');
+            card.className = `signal-card ${log.type === 'RED_CODE' ? 'danger' : 'info'}`;
+            card.innerHTML = `
+                <div>
+                    <div style="color:var(--gold); font-weight:bold;" data-key="lbl_signal_type">${log.type}</div>
+                    <div>${log.message}</div>
+                    <div style="font-size:8px; color:#555;">${new Date(log.time).toLocaleString()} | ${log.actor}</div>
+                </div>`;
+            area.appendChild(card);
+        });
+        applyLang();   // ← KRİTİK: Render sonrası dil uygula
+    }
+
+    async function runStratejist() {
+        const input = document.getElementById('admin_ai_input');
+        const display = document.getElementById('admin_chat_box');
+        if(!input.value) return;
+        display.innerHTML += `<div style="color:var(--gold); margin-top:10px;"><b>MİMAR:</b> ${input.value}</div>`;
+        const userPrompt = input.value;
+        input.value = "";
+        display.scrollTop = display.scrollHeight;
+
+        try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+            const res = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contents: [{ parts: [{ text: "Sen FOR YOU projesinin Stratejik Analiz AI'sısın. Mehmet Bey'in yardımcısısın. Şu konuyu analiz et: " + userPrompt }] }] })
+            });
+            const data = await res.json();
+            display.innerHTML += `<div style="color:var(--neon-blue); margin-top:10px;"><b>AI:</b> ${data.candidates[0].content.parts[0].text}</div>`;
+        } catch (e) { 
+            display.innerHTML += `<div style="color:var(--neon-red);">BAĞLANTI HATASI.</div>`; 
+        }
+        display.scrollTop = display.scrollHeight;
+        applyLang();   // ← AI cevabı sonrası da dil uygula
+    }
+
+    function testMultiSig() { 
+        FOR_YOU_STORAGE.logSecurityEvent("ADMİN", "Multi-Sig Onayı İstendi", "MULTI_SIG"); 
+        loadSignals(); 
+    }
+    function testRedCode() { 
+        document.getElementById('main_radar').classList.add('red-alert'); 
+        FOR_YOU_STORAGE.logSecurityEvent("VİP-HÜCRE", "KIRMIZI KOD: BASKI ALTINDA GİRİŞ!", "RED_CODE"); 
+        loadSignals(); 
+    }
+
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+    window.onload = () => { 
+        applyLang(); 
+        syncAdminDNA(); 
+        loadSignals(); 
+    };
+</script>
+</body>
+</html>
