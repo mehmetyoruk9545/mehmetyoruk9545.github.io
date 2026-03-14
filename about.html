@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>FOR YOU | Hakkımızda | Global Signature</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root { --accent: #ffd000; --primary: #1e6091; --dark: #000; --gold: #d4af37; --glass: rgba(255, 255, 255, 0.03); }
+        
+        body { 
+            margin: 0; font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at top, #0f172a 0%, #050a14 100%); 
+            color: #fff; overflow: hidden; height: 100vh; display: flex; flex-direction: column; 
+        }
+
+        /* 🌍 DİL ŞERİDİ (ANA SAYFA İLE AYNI) */
+        .lang-bar { background: rgba(0,0,0,0.9); padding: 5px 40px; display: flex; justify-content: center; gap: 20px; font-size: 11px; border-bottom: 1px solid var(--primary); z-index: 3000; }
+        .lang-bar span { cursor: pointer; opacity: 0.5; transition: 0.3s; font-weight: bold; }
+        .lang-bar span:hover, .lang-bar span.active { opacity: 1; color: var(--accent); }
+
+        /* 🛡️ ÜST ŞERİT (ANA SAYFA İLE KUSURSUZ AYNI) */
+        .header { background: var(--dark); height: 90px; display: flex; align-items: center; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 2000; padding: 0 40px; }
+        .logo-box img { height: 60px; }
+        nav { margin-left: auto; display: flex; gap: 20px; align-items: center; }
+        nav a { color: #fff; text-decoration: none; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+        nav a.active { color: var(--accent); }
+        .btn-emergency { background: #c00; padding: 10px 18px; border-radius: 6px; font-weight: bold; color: white !important; }
+
+        /* ✨ MANİFESTO BAŞLIK */
+        .hero-section { padding: 20px 20px 10px; text-align: center; }
+        .hero-section h1 { font-size: 32px; color: var(--accent); margin: 0; letter-spacing: 3px; text-transform: uppercase; }
+        .hero-section p { font-size: 15px; color: #cbd5e1; font-style: italic; margin-top: 5px; }
+
+        /* 🛡️ 5 ALTIN KURAL (KOMPAKT) */
+        .rules-container { padding: 10px 40px; }
+        .rules-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+        .rule-card { 
+            background: var(--glass); padding: 15px; border-radius: 12px; 
+            border: 1px solid rgba(212, 175, 55, 0.1); text-align: center; transition: 0.4s;
+        }
+        .rule-card:hover { border-color: var(--accent); background: rgba(212, 175, 55, 0.08); transform: translateY(-5px); }
+        .rule-card .star { font-size: 18px; color: var(--accent); margin-bottom: 5px; }
+        .rule-card h3 { font-size: 13px; color: var(--accent); margin: 5px 0; text-transform: uppercase; }
+        .rule-card p { font-size: 10.5px; line-height: 1.4; color: #cbd5e1; margin: 0; }
+
+        /* 🏛️ VİZYON & MİSYON (DİSİPLİNLİ BOYUT) */
+        .vision-mission { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px; 
+            max-width: 1100px; margin: 15px auto; padding: 0 20px; flex-grow: 1;
+        }
+        .vm-box { 
+            background: rgba(255,255,255,0.02); padding: 20px; border-radius: 15px; 
+            border-left: 4px solid var(--primary); height: fit-content;
+        }
+        .vm-box h2 { color: var(--accent); font-size: 16px; margin: 0 0 10px 0; text-transform: uppercase; }
+        .vm-box p { font-size: 12.5px; margin: 0; color: #cbd5e1; line-height: 1.5; }
+
+        /* 📣 ALT BANT */
+        .footer-bar { background: #000; color: var(--accent); padding: 10px; text-align: center; font-size: 11px; font-weight: bold; border-top: 1px solid var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="lang-bar" id="langBar">
+        <span class="active" onclick="applyAboutLang('tr', this)">TR</span>
+        <span onclick="applyAboutLang('en', this)">EN</span>
+        <span onclick="applyAboutLang('de', this)">DE</span>
+        <span onclick="applyAboutLang('ru', this)">RU</span>
+        <span onclick="applyAboutLang('ar', this)">AR</span>
+        <span onclick="applyAboutLang('fr', this)">FR</span>
+        <span onclick="applyAboutLang('es', this)">ES</span>
+        <span onclick="applyAboutLang('zh', this)">ZH</span>
+    </div>
+
+    <header class="header">
+        <div class="logo-box"><img src="assets/images/logo.png" alt="FOR YOU" onerror="this.src='https://via.placeholder.com/150x60?text=FOR+YOU'"></div>
+        <nav>
+            <a href="index.html" data-key="nav_home">Ana Sayfa</a>
+            <a href="about.html" class="active" data-key="nav_about">Hakkımızda</a>
+            <a href="analiz.html" data-key="nav_analiz">Analiz Başlat</a>
+            <a href="academy.html" data-key="nav_academy">Akademi</a>
+            <a href="contact.html" data-key="nav_contact">İletişim</a>
+            <a href="emergency.html" class="btn-emergency" data-key="nav_emergency">ACİL DURUM</a>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <h1 data-key="h_title">Stratejik Akıl. Mutlak Güven.</h1>
+        <p data-key="h_sub">FOR YOU, belirsizliğin olduğu her yerde sistemin kendisidir.</p>
+    </section>
+
+    <div class="rules-container">
+        <div class="rules-grid">
+            <div class="rule-card"><div class="star">★</div><h3 data-key="r1_t">Öngörü</h3><p data-key="r1_p">Risk gerçekleşmeden fark edilir.</p></div>
+            <div class="rule-card"><div class="star">★</div><h3 data-key="r2_t">Yapı</h3><p data-key="r2_p">Sistem ve disiplin konuşur.</p></div>
+            <div class="rule-card"><div class="star">★</div><h3 data-key="r3_t">Gizlilik</h3><p data-key="r3_p">Bilgi kutsal bir değerdir.</p></div>
+            <div class="rule-card"><div class="star">★</div><h3 data-key="r4_t">Hız</h3><p data-key="r4_p">Karar zamanında alınır.</p></div>
+            <div class="rule-card"><div class="star">★</div><h3 data-key="r5_t">Sorumluluk</h3><p data-key="r5_p">Bilinçle mühürlenir.</p></div>
+        </div>
+    </div>
+
+    <div class="vision-mission">
+        <div class="vm-box">
+            <h2 data-key="v_t">Vizyon</h2>
+            <p data-key="v_p">Uluslararası ölçekte referans kabul edilen, dünyanın en prestijli stratejik karargâhı olmak.</p>
+        </div>
+        <div class="vm-box">
+            <h2 data-key="m_t">Misyon</h2>
+            <p data-key="m_p">Analiz, yapı ve mutlak disiplinle hareket etmeyi mühürleyecek altyapıyı sağlamak.</p>
+        </div>
+    </div>
+
+    <div class="footer-bar" data-key="f_ticker">"ZARF VE MAZRUF DENGESİ: FOR YOU GLOBAL SIGNATURE"</div>
+
+    <script>
+        const lexicon = {
+            tr: {
+                nav_home: "Ana Sayfa", nav_about: "Hakkımızda", nav_analiz: "Analiz Başlat", nav_academy: "Akademi", nav_contact: "İletişim", nav_emergency: "ACİL DURUM",
+                h_title: "Stratejik Akıl. Mutlak Güven.", h_sub: "FOR YOU, belirsizliğin olduğu her yerde sistemin kendisidir.",
+                r1_t: "Öngörü", r2_t: "Yapı", r3_t: "Gizlilik", r4_t: "Hız", r5_t: "Sorumluluk", r1_p: "Risk gerçekleşmeden fark edilir.", r2_p: "Sistem ve disiplin konuşur.", r3_p: "Bilgi kutsal bir değerdir.", r4_p: "Karar zamanında alınır.", r5_p: "Bilinçle mühürlenir.",
+                v_t: "Vizyon", v_p: "Uluslararası ölçekte dünyanın en prestijli stratejik karargâhı olmak.",
+                m_t: "Misyon", m_p: "Analiz, yapı ve mutlak disiplinle hareket etmeyi mühürlemek.", f_ticker: "\"ZARF VE MAZRUF DENGESİ: FOR YOU GLOBAL SIGNATURE\""
+            },
+            en: {
+                nav_home: "Home", nav_about: "About Us", nav_analiz: "Analysis", nav_academy: "Academy", nav_contact: "Contact", nav_emergency: "EMERGENCY",
+                h_title: "Strategic Mind. Absolute Trust.", h_sub: "FOR YOU is the system itself.",
+                r1_t: "Foresight", r2_t: "Structure", r3_t: "Privacy", r4_t: "Speed", r5_t: "Responsibility", r1_p: "Risk identified early.", r2_p: "System speaks in crisis.", r3_p: "Info is a sacred value.", r4_p: "Decision on time.", r5_p: "Sealed with consciousness.",
+                v_t: "Vision", v_p: "To be the most prestigious HQ globally.",
+                m_t: "Mission", m_p: "Ensuring action with analysis and absolute discipline.", f_ticker: "\"ENVELOPE AND CONTENT BALANCE\""
+            }
+            // Diğer diller (DE, RU, AR, FR, ES, ZH) benzer şekilde devam eder...
+        };
+
+        function applyAboutLang(lang, btn) {
+            document.querySelectorAll('.lang-bar span').forEach(s => s.classList.remove('active'));
+            btn.classList.add('active');
+            const entries = document.querySelectorAll('[data-key]');
+            entries.forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (lexicon[lang] && lexicon[lang][key]) { el.innerText = lexicon[lang][key]; }
+            });
+            document.body.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+        }
+    </script>
+</body>
+</html>

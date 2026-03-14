@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>FOR YOU | Global AI Strategic Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root { 
+            --accent: #ffd000; --primary: #1e6091; --dark: #000; 
+            --panel: rgba(255, 255, 255, 0.05); --gold-gradient: linear-gradient(45deg, #d4af37, #f1d592); 
+            --red: #c00; --green: #22c55e;
+        }
+        
+        /* TEMEL AYARLAR */
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; background: #050a14; color: #fff; overflow: hidden; font-size: 14px; }
+        
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.5; }
+
+        /* HEADER */
+        .header { background: var(--dark); height: 90px; display: flex; align-items: center; border-bottom: 2px solid var(--primary); padding: 0 40px; justify-content: space-between; position: relative; z-index: 4000; }
+        .logo-box img { height: 50px; }
+        
+        nav { display: flex; gap: 25px; align-items: center; }
+        nav a { color: #cbd5e1; text-decoration: none; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
+        nav a:hover, nav a.active { color: var(--accent); }
+        .btn-emergency { background: var(--red) !important; padding: 12px 24px; border-radius: 6px; color: #fff !important; font-weight: 800; font-size: 11px; text-decoration: none; box-shadow: 0 0 15px rgba(204,0,0,0.5); }
+
+        /* ANA SAYFA DÜZENİ (GRID) */
+        .main-wrapper { position: relative; z-index: 10; height: calc(100vh - 140px); width: 100%; padding: 20px; box-sizing: border-box; }
+        
+        /* Sayfa Geçiş Mantığı */
+        .page { display: none; height: 100%; overflow-y: auto; } /* İçerik taşarsa kaydır */
+        .page.active { display: grid; } 
+        
+        /* Ana Sayfa Grid */
+        #page-home.active {
+            grid-template-columns: 300px 1fr 300px; 
+            gap: 30px; 
+            max-width: 1700px; 
+            margin: 0 auto; 
+            align-items: start;
+            overflow: hidden; /* Ana sayfa taşmasın */
+        }
+
+        /* Diğer Sayfalar (Akademi, Hakkımızda vb.) */
+        .page.full-page.active { display: block; max-width: 1200px; margin: 0 auto; padding-bottom: 50px; }
+
+        /* PANELLER */
+        .glass-panel { background: var(--panel); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; display: flex; flex-direction: column; backdrop-filter: blur(10px); }
+        .glass-panel h3 { color: var(--accent); border-bottom: 1px solid var(--accent); padding-bottom: 10px; font-size: 12px; margin: 0 0 15px 0; letter-spacing: 1.5px; }
+
+        .list-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.2s; font-size: 13px; }
+        .list-item:hover { color: var(--accent); padding-left: 8px; }
+
+        /* SOLDAKİ 3 KRİTİK BUTON */
+        .left-controls { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .btn-sys { padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.6); color: var(--accent); font-weight: 800; font-size: 11px; text-transform: uppercase; cursor: pointer; transition: 0.2s; text-align: center; }
+        .btn-sys:hover { background: var(--accent); color: #000; }
+        .btn-support { border-color: var(--green); color: var(--green); }
+        .btn-support:hover { background: var(--green); color: #fff; }
+
+        /* ORTA ALAN */
+        .hero-section { text-align: center; align-self: center; }
+        .hero-title { font-size: 34px; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; line-height: 1.3; }
+        .hero-desc { font-size: 15px; color: #94a3b8; max-width: 700px; margin: 0 auto; line-height: 1.7; }
+
+        /* DİL BARI */
+        .lang-bar { background: rgba(0,0,0,0.9); padding: 8px; display: flex; justify-content: center; gap: 20px; font-size: 11px; border-bottom: 1px solid var(--primary); z-index: 5000; position: relative; }
+        .lang-bar span { cursor: pointer; opacity: 0.5; font-weight: bold; transition: 0.3s; }
+        .lang-bar span.active, .lang-bar span:hover { opacity: 1; color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+        /* AI HUB */
+        .ai-fab { position: fixed; bottom: 80px; right: 40px; background: var(--gold-gradient); color: #000; padding: 15px 30px; border-radius: 40px; font-weight: 900; cursor: pointer; border: none; font-size: 12px; z-index: 6000; box-shadow: 0 10px 20px rgba(212,175,85,0.3); }
+        .ai-box { display: none; position: absolute; bottom: 70px; right: 0; width: 280px; background: #0f172a; border: 2px solid var(--accent); border-radius: 20px; padding: 25px; box-shadow: 0 0 50px #000; }
+        
+        /* TICKER */
+        .ticker-bar { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 2px solid var(--primary); padding: 10px 0; z-index: 5000; font-size: 12px; }
+
+        /* Form Inputları */
+        .input-std { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 15px; box-sizing: border-box; }
+
+        /* AKADEMİ ÖZEL STİLLERİ */
+        .academy-hero { text-align: center; padding: 60px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 40px; }
+        .academy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 60px; }
+        .academy-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 25px; border-radius: 12px; transition: 0.3s; }
+        .academy-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .academy-card h3 { color: var(--accent); margin-bottom: 10px; font-size: 18px; }
+        .academy-card p { color: #ccc; font-size: 13px; line-height: 1.6; }
+        .vip-section { background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(30,96,145,0.3)); border: 1px solid var(--accent); padding: 50px; border-radius: 20px; text-align: center; margin-bottom: 60px; }
+
+        /* Kaydırma Çubuğu */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+    </style>
+</head>
+<body onclick="closeAI(event)">
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="lang-bar" id="langBar">
+        <span onclick="setLang('tr', this)" class="active">TR</span>
+        <span onclick="setLang('en', this)">EN</span>
+        <span onclick="setLang('de', this)">DE</span>
+        <span onclick="setLang('ru', this)">RU</span>
+        <span onclick="setLang('ar', this)">AR</span>
+        <span onclick="setLang('fr', this)">FR</span>
+        <span onclick="setLang('es', this)">ES</span>
+        <span onclick="setLang('zh', this)">ZH</span>
+    </div>
+
+    <header class="header">
+        <div class="logo-box"><img src="assets/images/logo.png" alt="FOR YOU" style="height:50px;"></div>
+        <nav>
+            <a onclick="nav('home')" class="active" data-key="n1">Ana Sayfa</a>
+            <a onclick="nav('about')" data-key="n2">Hakkımızda</a>
+            <a onclick="nav('analysis')" data-key="n3">Analiz</a>
+            <a onclick="nav('academy')" data-key="n4">Akademi</a>
+            <a onclick="nav('contact')" data-key="n5">İletişim</a>
+            <a href="#" class="btn-emergency" data-key="n6">ACİL DURUM</a>
+        </nav>
+    </header>
+
+    <main class="main-wrapper">
+        
+        <div id="page-home" class="page active">
+            
+            <aside>
+                <div class="glass-panel" style="max-height: 350px;">
+                    <h3 data-key="s1">🏛️ RESMİ KURUMLAR</h3>
+                    <div style="overflow-y:auto; flex-grow:1;">
+                        <a href="#" class="list-item">e-Devlet Kapısı</a>
+                        <a href="#" class="list-item">SGK Kurumsal</a>
+                        <a href="#" class="list-item">Gelir İdaresi (GİB)</a>
+                        <a href="#" class="list-item">Merkez Bankası</a>
+                        <a href="#" class="list-item">Hazine ve Maliye</a>
+                        <a href="#" class="list-item">TÜİK Veri Portalı</a>
+                        <a href="#" class="list-item">BDDK</a>
+                    </div>
+                </div>
+
+                <div class="left-controls">
+                    <button class="btn-sys" data-key="s2">🤝 STRATEJİK PARTNERLER</button>
+                    <button class="btn-sys" onclick="nav('login')" data-key="y1">🛡️ YETKİLİ GİRİŞİ</button>
+                    <button class="btn-sys btn-support" data-key="o1">🟢 ÇEVRİM İÇİ DESTEK</button>
+                </div>
+            </aside>
+
+            <section class="hero-section">
+                <h1 class="hero-title" data-key="h1">Siz Hayatın Ritmini Deneyimleyin;<br>Biz Geleceğin Kaosunu Disiplinle Senkronize Edelim.</h1>
+                <p class="hero-desc" data-key="h2">Belirsizlik anlarında refleksler geçici, sistemler ise kalıcıdır. FOR YOU; yüksek risk içeren durumları küresel bir disiplinle koordine eden stratejik çözüm merkezinizdir.</p>
+            </section>
+
+            <aside>
+                <div class="glass-panel" style="height: 500px;">
+                    <h3 data-key="s3">💰 FİNANS TERMİNALİ</h3>
+                    <div style="overflow-y:auto;">
+                        <div class="list-item" style="display:flex; justify-content:space-between;"><span>USD/TRY</span><span style="color:var(--green)">34.4820</span></div>
+                        <div class="list-item" style="display:flex; justify-content:space-between;"><span>EUR/TRY</span><span style="color:var(--green)">37.1250</span></div>
+                        <div class="list-item" style="display:flex; justify-content:space-between;"><span>XAU/GR</span><span style="color:var(--red)">3,115.40</span></div>
+                        <div class="list-item" style="display:flex; justify-content:space-between;"><span>BIST 100</span><span style="color:var(--green)">9,420</span></div>
+                        <div class="list-item" style="display:flex; justify-content:space-between;"><span>BTC/USD</span><span style="color:var(--green)">92,150</span></div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <div id="page-academy" class="page full-page">
+            <div class="academy-hero">
+                <h1 style="font-size:40px; color:var(--accent); margin-bottom:20px;">Bilgiyi Mesleğe, Mesleği Güvenceye Dönüştüren Akademi</h1>
+                <p style="font-size:16px; color:#aaa; max-width:800px; margin:0 auto;">FOR YOU Akademi; insan kaynakları, bordro ve iş hukuku eğitimlerini yalnızca mevzuat çerçevesinde değil, kurumsal temsil ve profesyonel seviye anlayışıyla ele alır.</p>
+            </div>
+
+            <h2 style="color:var(--accent); text-align:center; margin-bottom:30px;">Eğitim Alanlarımız</h2>
+            <div class="academy-grid">
+                <div class="academy-card">
+                    <h3>İnsan Kaynakları Uygulamaları</h3>
+                    <p>İşe giriş, özlük, disiplin ve çıkış süreçleri. Modern İK yönetimi.</p>
+                </div>
+                <div class="academy-card">
+                    <h3>Bordro & SGK</h3>
+                    <p>Primler, teşvikler ve ceza doğuran kritik hatalar. Risk yönetimi.</p>
+                </div>
+                <div class="academy-card">
+                    <h3>İş Hukuku (Pratik)</h3>
+                    <p>Fesih, sözleşme ve ihtilaf öncesi önlemler. Stratejik hukuk.</p>
+                </div>
+                <div class="academy-card">
+                    <h3>Denetim & Risk Yönetimi</h3>
+                    <p>Denetmenlerin baktığı noktalar ve kurumunuzu koruma yöntemleri.</p>
+                </div>
+            </div>
+
+            <div class="vip-section">
+                <h2 style="color:var(--accent); margin-bottom:20px;">VIP Kurumsal Seviye Eğitimleri</h2>
+                <p style="color:#ddd; margin-bottom:40px;">Mevzuata uygun olmak zorunluluktur. Kurumu doğru temsil etmek ise ayrıcalıktır.</p>
+                <div class="academy-grid">
+                    <div class="academy-card"><h3>👔 Kurumsal Temsil & Duruş</h3></div>
+                    <div class="academy-card"><h3>🤝 Adabı Muaşeret</h3></div>
+                    <div class="academy-card"><h3>🏛️ Protokol Bilgisi</h3></div>
+                    <div class="academy-card"><h3>🗣️ Yönetici Dili</h3></div>
+                </div>
+            </div>
+            
+            <div style="text-align:center; margin-bottom:40px;">
+                <button class="btn-sys" style="background:var(--accent); color:#000; padding:15px 40px; font-size:14px;" onclick="nav('contact')">EĞİTİM TALEP ET</button>
+            </div>
+        </div>
+
+        <div id="page-login" class="page full-page">
+            <div class="glass-panel" style="width: 350px; text-align:center;">
+                <h3 data-key="y1">🛡️ YETKİLİ GİRİŞİ</h3>
+                <p style="font-size:12px; color:#aaa; margin-bottom:15px;">Lütfen yetkili isim veya erişim kodunu giriniz.</p>
+                <input type="password" id="loginKey" class="input-std" placeholder="Kullanıcı Adı / Kod">
+                <button class="btn-sys" style="width:100%; background:var(--accent); color:#000;" onclick="checkLogin()">GİRİŞ YAP</button>
+                <button class="btn-sys" style="width:100%; margin-top:10px; background:transparent; border:none;" onclick="nav('home')">← GERİ</button>
+            </div>
+        </div>
+
+        <div id="page-about" class="page full-page"><h1 style="font-size:36px; color:var(--accent);" data-key="n2">Hakkımızda</h1><p style="text-align:center; color:#ccc;">FOR YOU, küresel riskleri yerel hassasiyetlerle koordine eden stratejik çözüm merkezinizdir.</p></div>
+        
+        <div id="page-contact" class="page full-page">
+            <div class="glass-panel" style="width:500px;">
+                <h3 data-key="n5">İLETİŞİM</h3>
+                <input class="input-std" placeholder="Adınız Soyadınız">
+                <input class="input-std" placeholder="E-Posta Adresiniz">
+                <textarea class="input-std" rows="4" placeholder="Mesajınız..."></textarea>
+                <button class="btn-sys" style="background:var(--accent); color:#000;">GÖNDER</button>
+            </div>
+        </div>
+        
+        <div id="page-analysis" class="page full-page"><h1 style="font-size:36px; color:var(--accent);" data-key="n3">Analiz</h1><p style="text-align:center; color:#ccc;">Yapay zeka destekli risk analizi modülü yükleniyor...</p></div>
+
+    </main>
+
+    <div style="position:fixed; bottom:80px; right:40px; z-index:6000;">
+        <div id="aiBox" class="ai-box" onclick="event.stopPropagation()">
+            <h4 style="color:var(--accent); margin:0 0 15px 0;">AI HUB</h4>
+            <button class="btn-sys" style="margin-bottom:8px; width:100%;" data-key="a2">❓ SORU SOR</button>
+            <button class="btn-sys" style="width:100%;" data-key="a3">📊 ANALİZ ET</button>
+        </div>
+        <button class="ai-fab" onclick="toggleAI(event)" data-key="a1">✨ AI HUB</button>
+    </div>
+
+    <div class="ticker-bar">
+        <span style="background:#c00; padding:0 30px; font-weight:bold; height:100%; display:inline-flex; align-items:center; color:#fff;" data-key="t1">SON DAKİKA</span>
+        <marquee style="color:var(--accent); font-weight:bold; margin-left:10px;" data-key="t2">İzmir Koordinasyon Merkezi Aktif. | Raporlar Güncellendi.</marquee>
+    </div>
+
+    <script>
+        const dict = {
+            tr: { n1: "Ana Sayfa", n2: "Hakkımızda", n3: "Analiz", n4: "Akademi", n5: "İletişim", n6: "ACİL DURUM", s1: "🏛️ RESMİ KURUMLAR", s2: "🤝 PARTNERLER", s3: "💰 FİNANS", h1: "Siz Hayatın Ritmini Deneyimleyin;<br>Biz Geleceğin Kaosunu Disiplinle Senkronize Edelim.", h2: "Belirsizlik anlarında refleksler geçici, sistemler ise kalıcıdır.", y1: "🛡️ YETKİLİ GİRİŞİ", o1: "🟢 ÇEVRİM İÇİ DESTEK", a1: "✨ AI HUB", a2: "❓ SORU SOR", a3: "📊 ANALİZ ET", t1: "SON DAKİKA", t2: "İzmir aktif." },
+            en: { n1: "Home", n2: "About", n3: "Analysis", n4: "Academy", n5: "Contact", n6: "EMERGENCY", s1: "🏛️ OFFICIAL", s2: "🤝 PARTNERS", s3: "💰 FINANCE", h1: "Experience Life's Rhythm;<br>Let Us Synchronize Future Chaos.", h2: "Systems are permanent.", y1: "🛡️ STAFF LOGIN", o1: "🟢 ONLINE SUPPORT", a1: "✨ AI HUB", a2: "❓ ASK INFO", a3: "📊 ANALYZE", t1: "LATEST", t2: "Izmir active." },
+            de: { n1: "Startseite", n2: "Über uns", n3: "Analyse", n4: "Akademie", n5: "Kontakt", n6: "NOTFALL", s1: "🏛️ BEHÖRDEN", s2: "🤝 PARTNER", s3: "💰 FINANZEN", h1: "Erleben Sie den Rhythmus;", h2: "Systeme sind dauerhaft.", y1: "🛡️ LOGIN", o1: "🟢 SUPPORT", a1: "✨ AI HUB", t1: "AKTUELL", t2: "Izmir aktiv." },
+            ru: { n1: "Главная", n2: "О нас", n3: "Анализ", n4: "Академия", n5: "Контакт", n6: "СРОЧНО", s1: "🏛️ ВЛАСТЬ", s2: "🤝 ПАРТНЕРЫ", s3: "💰 ФИНАНСЫ", h1: "Почувствуйте ритм жизни;", h2: "Системы постоянны.", y1: "🛡️ ВХОД", o1: "🟢 ПОДДЕРЖКА", a1: "✨ AI HUB", t1: "СРОЧНО", t2: "Измир активен." },
+            ar: { n1: "الرئيسية", n2: "من نحن", n3: "تحليل", n4: "أكاديمية", n5: "اتصال", n6: "طوارئ", s1: "🏛️ رسمي", s2: "🤝 شركاء", s3: "💰 تمويل", h1: "جرب إيقاع الحياة؛", h2: "الأنظمة دائمة.", y1: "🛡️ دخول", o1: "🟢 دعم", a1: "✨ AI", t1: "عاجل", t2: "إزمير نشطة." },
+            fr: { n1: "Accueil", n2: "À propos", n3: "Analyse", n4: "Académie", n5: "Contact", n6: "URGENCE", s1: "🏛️ OFFICIEL", s2: "🤝 PARTENAIRES", s3: "💰 FINANCE", h1: "Vivez le rythme;", h2: "Les systèmes sont permanents.", y1: "🛡️ CONNEXION", o1: "🟢 SUPPORT", a1: "✨ AI HUB", t1: "DERNIÈRE", t2: "Izmir actif." },
+            es: { n1: "Inicio", n2: "Nosotros", n3: "Análisis", n4: "Academia", n5: "Contacto", n6: "EMERGENCIA", s1: "🏛️ OFICIAL", s2: "🤝 SOCIOS", s3: "💰 FINANZAS", h1: "Vive el ritmo;", h2: "Sistemas permanentes.", y1: "🛡️ ACCESO", o1: "🟢 SOPORTE", a1: "✨ AI HUB", t1: "ÚLTIMO", t2: "Izmir activo." },
+            zh: { n1: "首页", n2: "关于", n3: "分析", n4: "学院", n5: "联系", n6: "紧急", s1: "🏛️ 官方", s2: "🤝 伙伴", s3: "💰 金融", h1: "体验节奏;", h2: "系统是永久的。", y1: "🛡️ 登录", o1: "🟢 支持", a1: "✨ AI HUB", t1: "最新", t2: "伊兹密尔活跃。" }
+        };
+
+        function nav(p) {
+            document.querySelectorAll('.page').forEach(x => { x.style.display = 'none'; x.classList.remove('active'); });
+            const target = document.getElementById('page-'+p);
+            target.style.display = (p === 'home') ? 'grid' : 'block'; // Akademi ve diğerleri block
+            target.classList.add('active');
+        }
+
+        function setLang(l, b) {
+            sessionStorage.setItem('lang', l);
+            document.querySelectorAll('#langBar span').forEach(s => s.classList.remove('active'));
+            if(b) b.classList.add('active');
+            const t = dict[l] || dict['tr'];
+            document.querySelectorAll('[data-key]').forEach(e => { if(t[e.getAttribute('data-key')]) e.innerHTML = t[e.getAttribute('data-key')]; });
+            document.body.dir = (l === 'ar') ? 'rtl' : 'ltr';
+        }
+
+        function checkLogin() {
+            const v = document.getElementById('loginKey').value.toLowerCase();
+            if(v.includes('ayşe') || v.includes('betül') || v.includes('hatice') || v.includes('neva') || v.includes('meryem') || v.includes('şifa') || v.includes('mehmet') || v.includes('ipek')) {
+                alert("Giriş Onaylandı. Yönetici Paneline Yönlendiriliyorsunuz...");
+            } else {
+                alert("Erişim Reddedildi: Yetkisiz Giriş Denemesi.");
+            }
+        }
+
+        function toggleAI(e) { e.stopPropagation(); document.getElementById('aiBox').style.display = document.getElementById('aiBox').style.display=='block'?'none':'block'; }
+        function closeAI(e) { if(!document.getElementById('aiBox').contains(e.target)) document.getElementById('aiBox').style.display='none'; }
+
+        window.onload = () => {
+            setLang(sessionStorage.getItem('lang') || 'tr');
+            const c = document.getElementById('bg-canvas');
+            const x = c.getContext('2d');
+            c.width = window.innerWidth; c.height = window.innerHeight;
+            let p = Array(50).fill().map(() => ({x:Math.random()*c.width, y:Math.random()*c.height}));
+            function a() {
+                x.clearRect(0,0,c.width,c.height);
+                x.fillStyle="rgba(212,175,85,0.3)";
+                p.forEach(i => {
+                    i.y -= 0.5;
+                    if(i.y < 0) i.y = c.height;
+                    x.beginPath(); x.arc(i.x, i.y, 1, 0, 7); x.fill();
+                });
+                requestAnimationFrame(a);
+            }
+            a();
+        };
+    </script>
+</body>
+</html>

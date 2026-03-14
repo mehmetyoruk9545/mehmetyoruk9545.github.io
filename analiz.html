@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>FOR YOU | Stratejik Veri Arşivi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="assets/css/main.css">
+<script defer src="assets/js/panel.js"></script>
+<script defer src="assets/js/news.js"></script>
+<style>
+    /* ÜSTTEKİ KODDAN GELEN GÖRSEL İSKELET AYARLARI */
+    body { 
+        margin: 0; 
+        font-family: 'Segoe UI', Arial, sans-serif; 
+        background: linear-gradient(180deg, #050a14 0%, #0f172a 45%, #1e6091 100%) !important;
+        background-attachment: fixed !important;
+        color: #fff;
+        min-height: 100vh;
+    }
+
+    /* Mülakat formu iskeleti - Yan panellerden arındırılmış merkezi odak */
+    .form-focus-layout {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 20px;
+        padding-bottom: 100px;
+    }
+
+    .form-glass-card {
+        background: rgba(255, 255, 255, 0.98);
+        padding: 50px;
+        border-radius: 25px;
+        color: #0f172a;
+        box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+    }
+
+    /* ALTAKİ KODDAN GELEN ZENGİN İÇERİK STİLLERİ */
+    .step-content { display: none; }
+    .step-content.active { display: block; }
+    
+    .steps-header { display: flex; justify-content: space-between; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
+    .step-pill { font-size: 11px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .step-pill.active { color: #1e6091; border-bottom: 3px solid #1e6091; }
+
+    .section-title { background: #0f172a; color: #ffd000; padding: 15px; border-radius: 10px; margin: 30px 0 20px 0; font-size: 14px; text-transform: uppercase; font-weight: bold; letter-spacing: 1.5px; border-left: 5px solid #1e6091; }
+    
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .field { margin-bottom: 20px; }
+    label { display: block; font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase; }
+    input, select, textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; background: #fff; color: #0f172a; font-family: inherit; box-sizing: border-box; }
+    
+    .confidential-box { background: #f8fafc; border: 1px dashed #1e6091; padding: 25px; border-radius: 15px; margin: 20px 0; }
+    .red-alert-box { border: 2px dashed #dc2626; background: #fff5f5; padding: 30px; border-radius: 15px; }
+
+    .nav-btns { display: flex; justify-content: space-between; margin-top: 50px; }
+    .btn-act { padding: 18px 40px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 13px; transition: 0.3s; }
+    .btn-next { background: #1e6091; color: #fff; box-shadow: 0 10px 20px rgba(30,96,145,0.2); }
+    .btn-prev { background: #e2e8f0; color: #475569; }
+
+    /* Alt Haber Bandı ve Sabit Giriş */
+    .ticker-fixed { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1000; }
+    .fixed-gate { position: fixed; bottom: 85px; right: 20px; background: #000; border: 1px solid #ffd000; padding: 12px 25px; border-radius: 50px; color: #ffd000; text-decoration: none; font-size: 11px; font-weight: bold; z-index: 3000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html">
+        <img src="assets/images/logo.png" class="logo" alt="FOR YOU">
+    </a>
+    <nav>
+      <a href="index.html">Ana Sayfa</a>
+      <a href="about.html">Hakkımızda</a>
+      <a href="analiz.html" style="color: #ffd000; font-weight: bold;">Analiz Başlat</a>
+      <a href="services.html">Çalışma Modelimiz</a>
+      <a href="academy.html">FOR YOU Akademi</a>
+      <a href="contact.html">İletişim</a>
+      <a href="emergency.html" class="alert">Acil Durum</a>
+    </nav>
+  </div>
+</header>
+
+<div class="form-focus-layout">
+    <div class="form-glass-card">
+        <div class="steps-header">
+            <span class="step-pill active" id="s1">01. KİMLİK & AİLE</span>
+            <span class="step-pill" id="s2">02. YAŞAM & TERCİH</span>
+            <span class="step-pill" id="s3">03. VARLIK & VERGİ</span>
+            <span class="step-pill" id="s4">04. ÖZEL DOSYALAR</span>
+        </div>
+
+        <div style="font-size: 11px; color: #991b1b; font-weight: bold; text-align: right; margin-bottom: 10px;">🔒 GİZLİ VERİ GİRİŞİ</div>
+        
+        <form id="megaForm" action="dashboard.html">
+            
+            <div class="step-content active" id="step1">
+                <div class="section-title">PORTFÖY SAHİBİ VE ÇEKİRDEK AİLE TANIMLAMA</div>
+                <div class="grid-3">
+                    <div class="field"><label>Hitap</label><select><option>Sayın</option><option>Beyefendi</option><option>Hanımefendi</option></select></div>
+                    <div class="field"><label>Tam Ad Soyad</label><input type="text" value="Mehmet Yörük" required></div>
+                    <div class="field"><label>Kan Grubu</label><input type="text" placeholder="Örn: 0 Rh+"></div>
+                </div>
+                <div class="grid-3">
+                    <div class="field"><label>Medeni Durum</label><select><option>Evli</option><option>Bekar</option></select></div>
+                    <div class="field"><label>Eş Ad Soyad</label><input type="text" placeholder="İpek"></div>
+                    <div class="field"><label>Evlilik Yıldönümü</label><input type="date"></div>
+                </div>
+                <div class="confidential-box">
+                    <label>Çocukların Detaylı Bilgileri (Ayşe Betül, Hatice Neva, Meryem Şifa - Okul/Vize/Sağlık)</label>
+                    <textarea rows="4" placeholder="Hayati detayları buraya ekleyiniz..."></textarea>
+                </div>
+            </div>
+
+            <div class="step-content" id="step2">
+                <div class="section-title">YAŞAM TERCİHLERİ VE ÖZEL ÖLÇÜLER</div>
+                <div class="grid-3">
+                    <div class="field"><label>Doğum Günü</label><input type="date"></div>
+                    <div class="field"><label>Ayakkabı Numarası</label><input type="number"></div>
+                    <div class="field"><label>Tuttuğu Takım</label><input type="text"></div>
+                </div>
+                <div class="field"><label>Sağlık Geçmişi (Alerjiler, Kronik Durumlar, İlaçlar)</label><textarea rows="3"></textarea></div>
+                <div class="field"><label>Sosyal Statü Ve Mekan Tercihleri</label><textarea rows="2" placeholder="Sık kullanılan oteller, havayolları, restoranlar..."></textarea></div>
+            </div>
+
+            <div class="step-content" id="step3">
+                <div class="section-title">VARLIK YÖNETİMİ, VERGİ VE RESMİ BELGELER</div>
+                <div class="grid-2">
+                    <div class="field"><label>Araç Plaka / Vize / Kasko Bitiş</label><textarea rows="2"></textarea></div>
+                    <div class="field"><label>Emlak Vergisi / DASK / Kira Dönemleri</label><textarea rows="2"></textarea></div>
+                </div>
+                <div class="grid-2">
+                    <div class="field"><label>Pasaport / Ehliyet / Vize Yenileme</label><textarea rows="2"></textarea></div>
+                    <div class="field"><label>Silah Taşıma / Mesleki Oda Aidatları</label><textarea rows="2"></textarea></div>
+                </div>
+            </div>
+
+            <div class="step-content" id="step4">
+                <div class="section-title" style="background:#991b1b;">04. YÜKSEK GİZLİLİK DERECELİ ÖZEL DOSYALAR</div>
+                <div class="red-alert-box">
+                    <label style="color:#991b1b; font-size: 13px;">🚨 ÖZEL SOSYAL BAĞLAR VE SORUMLULUKLAR</label>
+                    <textarea rows="6" placeholder="Burslar, gizli yardımlar, aile dışı özel organizasyonlar ve hassas notlar..."></textarea>
+                </div>
+                <div class="field" style="margin-top:20px;"><label>YALNIZCA ŞAHSINIZA RAPORLANACAK ÖZEL TALİMATLAR</label><textarea rows="3"></textarea></div>
+            </div>
+
+            <div class="nav-btns">
+                <button type="button" class="btn-act btn-prev" id="prevBtn" onclick="nextStep(-1)">Geri</button>
+                <button type="button" class="btn-act btn-next" id="nextBtn" onclick="nextStep(1)">Sonraki Adım</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="ticker ticker-fixed">
+  <span id="news-text">"Sizin unuttuklarınız, bizim emanetimizdir."</span>
+</div>
+
+<a href="login.html" class="fixed-gate">🛡️ YETKİLİ GİRİŞİ</a>
+
+<script>
+    let

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>FOR YOU | Global AI Strategic Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root { --accent: #ffd000; --primary: #1e6091; --dark: #000; --panel: rgba(255, 255, 255, 0.03); --gold-gradient: linear-gradient(45deg, #d4af37, #f1d592); }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', sans-serif; background: #050a14; color: #fff; overflow: hidden; position: relative; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.8; }
+        .content-wrapper { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; }
+        .lang-bar { background: rgba(0,0,0,0.9); padding: 8px 40px; display: flex; justify-content: center; gap: 15px; font-size: 11px; border-bottom: 1px solid var(--primary); z-index: 3000; }
+        .lang-bar span { cursor: pointer; opacity: 0.5; transition: 0.3s; font-weight: bold; }
+        .lang-bar span.active { opacity: 1; color: var(--accent); }
+        .header { background: var(--dark); height: 80px; display: flex; align-items: center; border-bottom: 2px solid var(--primary); padding: 0 40px; }
+        .logo-box img { height: 50px; }
+        nav { margin-left: auto; display: flex; gap: 20px; align-items: center; }
+        nav a { color: #fff; text-decoration: none; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        nav a.active { color: var(--accent); }
+        .btn-emergency { background: #c00; padding: 10px 18px; border-radius: 6px; font-weight: bold; color: white !important; font-size: 10px; }
+        .main-layout { display: grid; grid-template-columns: 340px 1fr 320px; gap: 25px; max-width: 1750px; margin: 15px auto; padding: 0 20px; flex-grow: 1; overflow: hidden; }
+        .side-box { background: var(--panel); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); padding: 15px; display: flex; flex-direction: column; overflow: hidden; }
+        .side-box.left-top { height: 40vh; } 
+        .side-box h3 { color: var(--accent); border-bottom: 1px solid var(--accent); padding-bottom: 8px; font-size: 12px; margin-top: 0; }
+        .search-input { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 8px; border-radius: 5px; color: #fff; font-size: 10px; margin-bottom: 10px; width: 93%; outline: none; }
+        .scroll-area { overflow-y: auto; flex-grow: 1; }
+        .list-link { display: block; color: #cbd5e1; text-decoration: none; padding: 8px 0; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .hero-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .hero-title { font-size: 38px; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
+        .hero-subtitle { font-size: 14px; color: #94a3b8; max-width: 650px; margin: 20px auto; line-height: 1.7; font-style: italic; }
+        .fin-item { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 10px; border-left: 3px solid var(--accent); }
+        .btn-tower { position: fixed; bottom: 75px; left: 30px; display: flex; flex-direction: column; gap: 10px; z-index: 4000; }
+        .btn-action { padding: 10px 20px; border-radius: 50px; font-weight: bold; text-decoration: none; font-size: 10px; text-align: center; transition: 0.3s; min-width: 170px; cursor: pointer; }
+        .btn-partner-trigger { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+        .btn-staff-login { background: #000; border: 1px solid var(--accent); color: var(--accent); }
+        .btn-online-support { background: #22c55e; color: #fff; }
+        .ai-fab { position: fixed; bottom: 75px; right: 30px; background: var(--accent); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 4000; font-size: 11px; }
+        #ai-hub, #partner-hub { display: none; position: fixed; bottom: 150px; width: 360px; background: #0f172a; border: 2px solid var(--accent); border-radius: 20px; z-index: 5000; box-shadow: 0 20px 60px #000; }
+        #ai-hub { right: 30px; } #partner-hub { left: 30px; }
+        .modal-tabs { display: flex; border-bottom: 1px solid #334155; }
+        .modal-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-size: 9px; font-weight: bold; color: #64748b; }
+        .modal-tab.active { color: var(--accent); background: #1e293b; border-bottom: 2px solid var(--accent); }
+        .modal-body { padding: 15px; height: 180px; font-size: 11px; }
+        .ticker-bar { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 2px solid var(--primary); padding: 10px 0; z-index: 1001; }
+        .ticker-tag { background: #c00; color: #fff; padding: 0 15px; font-weight: bold; font-size: 11px; height: 100%; position: absolute; left: 0; z-index: 2; display: flex; align-items: center; }
+    </style>
+</head>
+<body onclick="closeModals(event)">
+    <canvas id="bg-canvas"></canvas>
+    <div class="content-wrapper">
+        <div class="lang-bar">
+            <span class="active" onclick="mühürle('tr', this)">TR</span>
+            <span onclick="mühürle('en', this)">EN</span>
+            <span onclick="mühürle('de', this)">DE</span>
+            <span onclick="mühürle('ru', this)">RU</span>
+            <span onclick="mühürle('ar', this)">AR</span>
+            <span onclick="mühürle('fr', this)">FR</span>
+            <span onclick="mühürle('es', this)">ES</span>
+            <span onclick="mühürle('zh', this)">ZH</span>
+        </div>
+        <header class="header">
+            <div class="logo-box"><img src="assets/images/logo.png" alt="FOR YOU" onerror="this.src='https://via.placeholder.com/150x50?text=FOR+YOU'"></div>
+            <nav>
+                <a href="index.html" class="active" data-key="n1">Ana Sayfa</a>
+                <a href="about.html" data-key="n2">Hakkımızda</a>
+                <a href="analiz.html" data-key="n3">Analiz Başlat</a>
+                <a href="academy.html" data-key="n4">Akademi</a>
+                <a href="contact.html" data-key="n5">İletişim</a>
+                <a href="emergency.html" class="btn-emergency" data-key="n6">ACİL DURUM</a>
+            </nav>
+        </header>
+        <div class="main-layout">
+            <aside><div class="side-box left-top"><h3 data-key="s1">🏛️ RESMİ KURUMLAR</h3><input type="text" class="search-input" data-placeholder="p1" id="instSearch" onkeyup="filter()"><div class="scroll-area" id="instList"><a href="https://www.turkiye.gov.tr" target="_blank" class="list-link">e-Devlet Kapısı</a><a href="https://www.sgk.gov.tr" target="_blank" class="list-link">SGK Kurumsal</a><a href="https://www.gib.gov.tr" target="_blank" class="list-link">Gelir İdaresi (GİB)</a><a href="https://www.tuik.gov.tr" target="_blank" class="list-link">TÜİK Veri Portalı</a><a href="https://www.tcmb.gov.tr" target="_blank" class="list-link">Merkez Bankası</a><a href="https://www.hmb.gov.tr" target="_blank" class="list-link">Hazine ve Maliye</a></div></div></aside>
+            <main class="hero-content"><h1 class="hero-title" data-key="h1">Siz Hayatın Ritmini Deneyimleyin;<br>Biz Geleceğin Kaosunu Disiplinle Senkronize Edelim.</h1><p class="hero-subtitle" data-key="h2">Belirsizlik anlarında refleksler geçici, sistemler ise kalıcıdır. FOR YOU; yüksek risk içeren durumları küresel bir disiplinle koordine eden stratejik çözüm merkezinizdir.</p></main>
+            <aside class="side-box"><h3 data-key="s3">💰 FİNANS TERMİNALİ</h3><div class="scroll-area"><div class="fin-item"><span>USD/TRY</span><span style="color:#22c55e">34.4820</span></div><div class="fin-item"><span>EUR/TRY</span><span style="color:#22c55e">37.1250</span></div><div class="fin-item"><span>XAU/GR</span><span style="color:#ef4444">3,115.40</span></div><div class="fin-item"><span>BIST 100</span><span style="color:#22c55e">9,420</span></div><div class="fin-item"><span>BTC/USD</span><span style="color:#22c55e">91,150</span></div></div></aside>
+        </div>
+        <div class="btn-tower">
+            <button onclick="togglePartner(event)" class="btn-action btn-partner-trigger" data-key="s2">🤝 STRATEJİK PARTNERLER</button>
+            <a href="login.html" class="btn-action btn-staff-login" data-key="y1">🛡️ YETKİLİ GİRİŞİ</a>
+            <a href="contact.html" class="btn-action btn-online-support" data-key="o1">🟢 ÇEVRİM İÇİ DESTEK</a>
+        </div>
+        <div class="ai-fab" onclick="toggleAI(event)" data-key="a1">✨ FOR YOU AI HUB</div>
+        <div id="ai-hub" onclick="event.stopPropagation()"><div class="modal-tabs"><div class="modal-tab active" id="tab-q" onclick="aiTab('q')">SORU SOR</div><div class="modal-tab" id="tab-s" onclick="aiTab('s')">STRATEJİK ANALİZ</div></div><div class="modal-body" id="ai-text">Size nasıl refakat edebilirim?</div></div>
+        <div id="partner-hub" onclick="event.stopPropagation()"><div class="modal-tabs"><div class="modal-tab active" id="p-vip" onclick="partnerTab('vip')">VIP ERİŞİM</div><div class="modal-tab" id="p-auth" onclick="partnerTab('auth')">YETKİ TALEBİ</div></div><div class="modal-body" id="partner-body"><p style="color:var(--accent); font-size:10px;">Stratejik partner verileri kademeli güvenlik altındadır.</p><input type="text" class="search-input" id="partnerKey" placeholder="VIP ID: FORYOU2026" style="margin-top:20px; width:94%;"><button onclick="masterAccess()" style="background:var(--accent); border:none; color:#000; padding:10px; width:100%; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">GİRİŞ YAP</button></div></div>
+        <div class="ticker-bar"><div class="ticker-tag" data-key="t1">İZMİR SON DAKİKA</div><marquee scrollamount="5" style="padding-left:160px; color:var(--accent); font-weight:bold;" data-key="t2">📢 İzmir Körfezi stratejik koordinasyon merkezi aktif. | 🌤️ Bölgesel rapor hazır.</marquee></div>
+    </div>
+    <script>
+        const dict = {
+            tr: { n1: "Ana Sayfa", n2: "Hakkımızda", n3: "Analiz Başlat", n4: "Akademi", n5: "İletişim", n6: "ACİL DURUM", s1: "🏛️ RESMİ KURUMLAR", s2: "🤝 STRATEJİK PARTNERLER", s3: "💰 FİNANS TERMİNALİ", p1: "Kurum Ara...", h1: "Siz Hayatın Ritmini Deneyimleyin; Biz Geleceğin Kaosunu Disiplinle Senkronize Edelim.", h2: "Belirsizlik anlarında refleksler geçici, sistemler ise kalıcıdır. FOR YOU; yüksek risk içeren durumları küresel bir disiplinle koordine eden stratejik çözüm merkezinizdir.", a1: "✨ FOR YOU AI HUB", o1: "🟢 ÇEVRİM İÇİ DESTEK", y1: "🛡️ YETKİLİ GİRİŞİ", t1: "İZMİR SON DAKİKA", t2: "📢 İzmir Körfezi stratejik koordinasyon merkezi aktif." },
+            en: { n1: "Home", n2: "About Us", n3: "Analysis", n4: "Academy", n5: "Contact", n6: "EMERGENCY", s1: "🏛️ OFFICIAL INST.", s2: "🤝 STRATEGIC PARTNERS", s3: "💰 FINANCE TERMINAL", p1: "Search...", h1: "Experience Life's Rhythm; We Synchronize Future Chaos with Discipline.", h2: "In moments of uncertainty, reflexes are temporary, systems are permanent.", a1: "✨ FOR YOU AI HUB", o1: "🟢 ONLINE SUPPORT", y1: "🛡️ STAFF LOGIN", t1: "IZMIR LATEST", t2: "📢 Strategic center active." },
+            de: { n1: "Startseite", n2: "Über uns", n3: "Analyse", n4: "Akademie", n5: "Kontakt", n6: "NOTFALL", s1: "🏛️ BEHÖRDEN", s2: "🤝 PARTNER", s3: "💰 FINANZTERMINAL", p1: "Suche...", h1: "Erleben Sie den Lebensrhythmus; Wir synchronisieren das Chaos der Zukunft.", h2: "In Momenten der Unsicherheit sind Reflexe vorübergehend, Systeme sind dauerhaft.", a1: "✨ KI HUB", o1: "🟢 SUPPORT", y1: "🛡️ LOGIN", t1: "IZMIR AKTUELL", t2: "📢 Strategisches Zentrum aktif." },
+            ru: { n1: "Главная", n2: "О нас", n3: "Анализ", n4: "Академия", n5: "Контакт", n6: "СРОЧНО", s1: "🏛️ ВЛАСТЬ", s2: "🤝 ПАРТНЕРЫ", s3: "💰 ФИНАНСЫ", p1: "Поиск...", h1: "Почувствуйте ритм жизни; Мы синхронизируем хаос будущего.", h2: "В моменты неопределенности рефлексы временны, системы постоянны.", a1: "✨ ИИ ХАБ", o1: "🟢 ПОДДЕРЖКА", y1: "🛡️ ВХОD", t1: "ИЗМИР НОВОСТИ", t2: "📢 Стратегический центр активен." },
+            ar: { n1: "الرئيسية", n2: "من نحن", n3: "التحليل", n4: "أكاديمية", n5: "اتصال", n6: "طوارئ", s1: "🏛️ المؤسسات", s2: "🤝 الشركاء", s3: "💰 المحطة المالية", p1: "بحث...", h1: "استمتع بإيقاع الحياة؛ نحن نزامن فوضى المستقبل بالانضباط.", h2: "في لحظات عدم اليقين، تكون ردود الفعل مؤقتة والأنظمة دائمة.", a1: "✨ مركز الذكاء الاصطناعي", o1: "🟢 دعم مباشر", y1: "🛡️ دخول", t1: "إزمير عاجل", t2: "📢 المركز الاستراتيجي مفعل." },
+            fr: { n1: "Accueil", n2: "À propos", n3: "Analyse", n4: "Académie", n5: "Contact", n6: "URGENCE", s1: "🏛️ INSTITUTIONS", s2: "🤝 PARTENAIRES", s3: "💰 TERMINAL FINANCIER", p1: "Chercher...", h1: "Vivez le rythme de la vie; Nous synchronisons le chaos futur.", h2: "Dans l'incertitude, les réflexes sont temporaires, les systèmes permanents.", a1: "✨ IA HUB", o1: "🟢 SUPPORT", y1: "🛡️ CONNEXION", t1: "IZMIR INFOS", t2: "📢 Centre stratégique aktif." },
+            es: { n1: "Inicio", n2: "Nosotros", n3: "Análisis", n4: "Academia", n5: "Contacto", n6: "EMERGENCIA", s1: "🏛️ INSTITUCIONES", s2: "🤝 SOCIOS", s3: "💰 TERMINAL FINANCIERO", p1: "Buscar...", h1: "Vive el ritmo de la vida; Sincronizamos el caos futuro.", h2: "En la incertidumbre, los reflejos son temporales, los sistemas permanentes.", a1: "✨ IA HUB", o1: "🟢 SOPORTE", y1: "🛡️ ACCESO", t1: "IZMIR ÚLTIMA HORA", t2: "📢 Centro estratégico aktif." },
+            zh: { n1: "首页", n2: "关于我们", n3: "分析", n4: "学院", n5: "联系", n6: "紧急情况", s1: "🏛️ 官方机构", s2: "🤝 合作伙伴", s3: "💰 金融终端", p1: "搜索...", h1: "感受生活节奏；我们用纪律同步未来的混沌。", h2: "在不确定时刻，反应是暂时的，系统是永恒的。", a1: "✨ 智能助手", o1: "🟢 在线支持", y1: "🛡️ 登录", t1: "伊兹密尔快讯", t2: "📢 战略中心激活。" }
+        };
+        function mühürle(lang, btn) { document.querySelectorAll('.lang-bar span').forEach(s => s.classList.remove('active')); btn.classList.add('active'); const t = dict[lang] || dict['en']; document.querySelectorAll('[data-key]').forEach(el => { el.innerText = t[el.getAttribute('data-key')]; }); document.getElementById('instSearch').placeholder = t.p1; document.body.dir = (lang === 'ar') ? 'rtl' : 'ltr'; }
+        function toggleAI(e) { e.stopPropagation(); document.getElementById('partner-hub').style.display='none'; let h = document.getElementById('ai-hub'); h.style.display = h.style.display === 'block' ? 'none' : 'block'; }
+        function togglePartner(e) { e.stopPropagation(); document.getElementById('ai-hub').style.display='none'; let h = document.getElementById('partner-hub'); h.style.display = h.style.display === 'block' ? 'none' : 'block'; }
+        function closeModals() { document.getElementById('ai-hub').style.display = 'none'; document.getElementById('partner-hub').style.display = 'none'; }
+        function aiTab(mode) { document.getElementById('tab-q').classList.toggle('active', mode === 'q'); document.getElementById('tab-s').classList.toggle('active', mode === 's'); document.getElementById('ai-text').innerText = mode === 'q' ? "Soru ve bilgi alma modundasınız." : "🚨 Stratejik Analiz modu aktif."; }
+        function partnerTab(mode) { document.getElementById('p-vip').classList.toggle('active', mode === 'vip'); document.getElementById('p-auth').classList.toggle('active', mode === 'auth'); document.getElementById('partner-body').querySelector('p').innerText = mode === 'vip' ? "Stratejik partner verileri kademeli güvenlik altındadır." : "Partner ağımıza katılım için yetki talebiniz işleme alınacaktır."; }
+        function masterAccess() { if(document.getElementById('partnerKey').value === "FORYOU2026") { alert("VIP Erişim Onaylandı."); window.location.href = "dashboard.html"; } else { alert("Yetkisiz Erişim."); } }
+        function filter() { let val = document.getElementById('instSearch').value.toUpperCase(); let links = document.getElementById('instList').getElementsByTagName('a'); for(let a of links) { a.style.display = a.innerText.toUpperCase().indexOf(val) > -1 ? "" : "none"; } }
+        const canvas = document.getElementById('bg-canvas'), ctx = canvas.getContext('2d'); let particles = [];
+        function init() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; particles = []; for(let i=0; i<120; i++) { particles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, vx: (Math.random()-0.5)*0.5, vy: (Math.random()-0.5)*0.5, size: Math.random()*1.8 + 0.2 }); } }
+        function draw() { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = "rgba(212, 175, 55, 0.5)"; particles.forEach(p => { p.x += p.vx; p.y += p.vy; if(p.x < 0 || p.x > canvas.width) p.vx *= -1; if(p.y < 0 || p.y > canvas.height) p.vy *= -1; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); }); requestAnimationFrame(draw); }
+        window.addEventListener('resize', init); window.onload = function() { init(); draw(); };
+    </script>
+</body>
+</html>

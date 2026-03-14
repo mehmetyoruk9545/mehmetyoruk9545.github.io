@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>FOR YOU | İletişim</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="assets/css/main.css">
+<script defer src="assets/js/panel.js"></script>
+<script defer src="assets/js/news.js"></script>
+<style>
+    /* ÜSTTEKİ KODDAN GELEN GÖRSEL İSKELET AYARLARI */
+    body { 
+        margin: 0; 
+        font-family: 'Segoe UI', Arial, sans-serif; 
+        background: linear-gradient(180deg, #050a14 0%, #0f172a 45%, #1e6091 100%) !important;
+        background-attachment: fixed !important;
+        color: #fff;
+        min-height: 100vh;
+    }
+
+    /* Mülakat formu iskeleti - Yan panellerden arındırılmış merkezi odak */
+    .form-focus-layout {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 20px;
+        padding-bottom: 100px;
+    }
+
+    .form-glass-card {
+        background: rgba(255, 255, 255, 0.98);
+        padding: 50px;
+        border-radius: 25px;
+        color: #0f172a;
+        box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+    }
+
+    /* ALTAKİ KODDAN GELEN ZENGİN İÇERİK STİLLERİ */
+    .step-content { display: none; }
+    .step-content.active { display: block; }
+    
+    .steps-header { display: flex; justify-content: space-between; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
+    .step-pill { font-size: 11px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .step-pill.active { color: #1e6091; border-bottom: 3px solid #1e6091; }
+
+    .section-title { background: #0f172a; color: #ffd000; padding: 15px; border-radius: 10px; margin: 30px 0 20px 0; font-size: 14px; text-transform: uppercase; font-weight: bold; letter-spacing: 1.5px; border-left: 5px solid #1e6091; }
+    
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .field { margin-bottom: 20px; }
+    label { display: block; font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase; }
+    input, select, textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; background: #fff; color: #0f172a; font-family: inherit; box-sizing: border-box; }
+    
+    .confidential-box { background: #f8fafc; border: 1px dashed #1e6091; padding: 25px; border-radius: 15px; margin: 20px 0; }
+    .red-alert-box { border: 2px dashed #dc2626; background: #fff5f5; padding: 30px; border-radius: 15px; }
+
+    .nav-btns { display: flex; justify-content: space-between; margin-top: 50px; }
+    .btn-act { padding: 18px 40px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 13px; transition: 0.3s; }
+    .btn-next { background: #1e6091; color: #fff; box-shadow: 0 10px 20px rgba(30,96,145,0.2); }
+    .btn-prev { background: #e2e8f0; color: #475569; }
+
+    /* Alt Haber Bandı ve Sabit Giriş */
+    .ticker-fixed { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1000; }
+    .fixed-gate { position: fixed; bottom: 85px; right: 20px; background: #000; border: 1px solid #ffd000; padding: 12px 25px; border-radius: 50px; color: #ffd000; text-decoration: none; font-size: 11px; font-weight: bold; z-index: 3000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+    /* İLETİŞİM SAYFASI ÖZEL STİLLERİ (YENİ EKLENDİ) */
+    .contact-hero { text-align: center; padding: 40px 20px; }
+    .contact-form-card { background: rgba(255, 255, 255, 0.98); padding: 40px; border-radius: 20px; color: #0f172a; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-width: 800px; margin: 0 auto; }
+    .contact-form-card h2 { color: #0f172a; margin-top: 0; font-size: 24px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 25px; }
+    .info-note-box { margin-top: 30px; background: rgba(30, 96, 145, 0.1); padding: 20px; border-radius: 12px; border-left: 5px solid #ffd000; font-size: 14px; line-height: 1.6; color: #fff; max-width: 800px; margin: 30px auto; }
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html">
+        <img src="assets/images/logo.png" class="logo" alt="FOR YOU">
+    </a>
+    <nav>
+      <a href="index.html">Ana Sayfa</a>
+      <a href="about.html">Hakkımızda</a>
+      <a href="analiz.html" style="color: #ffd000; font-weight: bold;">Analiz Başlat</a>
+      <a href="services.html">Çalışma Modelimiz</a>
+      <a href="

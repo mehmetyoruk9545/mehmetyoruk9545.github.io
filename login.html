@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>FOR YOU | Secure Access Gateway</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root { --accent: #ffd000; --primary: #1e6091; --dark: #050a14; --gold-gradient: linear-gradient(45deg, #d4af37, #f1d592); }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', sans-serif; background: #050a14; color: #fff; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.6; }
+        .login-card { position: relative; z-index: 10; width: 420px; padding: 45px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 212, 0, 0.2); border-radius: 35px; backdrop-filter: blur(20px); text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.6); }
+        h2 { color: var(--accent); letter-spacing: 4px; font-weight: 800; text-transform: uppercase; margin-bottom: 25px; font-size: 18px; }
+        .role-selector { display: flex; gap: 10px; margin-bottom: 30px; justify-content: center; }
+        .role-btn { padding: 8px 15px; font-size: 10px; border: 1px solid #334155; background: rgba(0,0,0,0.5); color: #94a3b8; border-radius: 6px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        .role-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(255,208,0,0.1); }
+        .input-group { margin-bottom: 20px; text-align: left; position: relative; }
+        label { display: block; font-size: 10px; color: #94a3b8; margin: 0 0 8px 5px; text-transform: uppercase; letter-spacing: 1px; }
+        input { width: 100%; padding: 15px; background: rgba(15, 23, 42, 0.9); border: 1px solid #334155; color: white; border-radius: 12px; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
+        input:focus { border-color: var(--accent); outline: none; }
+        .toggle-pass { position: absolute; right: 15px; bottom: 12px; cursor: pointer; color: #94a3b8; font-size: 18px; }
+        .btn-access { width: 100%; padding: 16px; background: var(--gold-gradient); border: none; color: #000; font-weight: bold; cursor: pointer; border-radius: 12px; margin-top: 10px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+        #update-panel { display: none; margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px; }
+        .req-list { font-size: 9px; color: #ef4444; text-align: left; margin-top: 15px; list-style: none; padding: 0; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="login-card">
+        <h2 id="main-title">Güvenli Erişim</h2>
+        <div class="role-selector">
+            <div class="role-btn active" onclick="setRole('KURUCU / YÖNETİCİ', this)">KURUCU / YÖNETİCİ</div>
+            <div class="role-btn" onclick="setRole('SUPERVISOR', this)">SUPERVISOR</div>
+            <div class="role-btn" onclick="setRole('PERSONEL', this)">PERSONEL</div>
+        </div>
+        <div id="login-form">
+            <div class="input-group">
+                <label>KİMLİK DOĞRULAMA (TC)</label>
+                <input type="text" id="tc" placeholder="TC giriniz" onkeypress="handleEnter(event, 'login')">
+            </div>
+            <div class="input-group">
+                <label>GÜVENLİK ANAHTARI</label>
+                <input type="password" id="pass" placeholder="••••••••" onkeypress="handleEnter(event, 'login')">
+                <span class="toggle-pass" onclick="toggleVisibility('pass')">👁️</span>
+            </div>
+            <button class="btn-access" onclick="verifySystemAccess()">SİSTEME GİRİŞ YAP</button>
+        </div>
+        <div id="update-panel">
+            <p style="color:var(--accent); font-size:11px; font-weight:bold;">⚠️ GÜVENLİK GÜNCELLEMESİ GEREKLİ</p>
+            <div class="input-group">
+                <label>YENİ GÜÇLÜ ŞİFRE</label>
+                <input type="password" id="new-pass" placeholder="Yeni şifre" onkeypress="handleEnter(event, 'update')">
+                <span class="toggle-pass" onclick="toggleVisibility('new-pass')">👁️</span>
+            </div>
+            <div class="input-group">
+                <label>YENİ ŞİFRE (DOĞRULAMA)</label>
+                <input type="password" id="new-pass-confirm" placeholder="Tekrar girin" onkeypress="handleEnter(event, 'update')">
+                <span class="toggle-pass" onclick="toggleVisibility('new-pass-confirm')">👁️</span>
+            </div>
+            <button class="btn-access" onclick="finalizeSecurityUpdate()">ŞİFREYİ MÜHÜRLE VE GİR</button>
+            <ul class="req-list"><li>• Şifreler eşleşmeli, en az 8 karakter, büyük harf ve rakam içermelidir.</li></ul>
+        </div>
+    </div>
+
+    <script>
+        let activeRole = "KURUCU / YÖNETİCİ";
+        const USER_CONF = { tc: "52996038192", pass: "my 47911891", isTemp: true, lastUpdate: "2025-11-01" };
+
+        function setRole(role, btn) {
+            activeRole = role;
+            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // 🎹 ENTER TUŞU KONTROLÜ (ANAYASAL KAZANIM)
+        function handleEnter(event, type) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                if (type === 'login') verifySystemAccess();
+                else if (type === 'update') finalizeSecurityUpdate();
+            }
+        }
+
+        function toggleVisibility(id) {
+            const el = document.getElementById(id);
+            el.type = el.type === "password" ? "text" : "password";
+        }
+
+        function verifySystemAccess() {
+            const tc = document.getElementById('tc').value;
+            const pass = document.getElementById('pass').value;
+            const diffDays = Math.floor((new Date() - new Date(USER_CONF.lastUpdate)) / (1000 * 60 * 60 * 24));
+            if(tc === USER_CONF.tc && pass === USER_CONF.pass) {
+                sessionStorage.setItem('activeRole', activeRole);
+                if(USER_CONF.isTemp || diffDays > 90) {
+                    document.getElementById('login-form').style.display = 'none';
+                    document.getElementById('update-panel').style.display = 'block';
+                    document.getElementById('main-title').innerText = "GÜVENLİK YENİLEME";
+                } else { window.location.href = "dashboard.html"; }
+            } else { alert("Erişim Reddedildi!"); }
+        }
+
+        function finalizeSecurityUpdate() {
+            const p1 = document.getElementById('new-pass').value;
+            const p2 = document.getElementById('new-pass-confirm').value;
+            if(p1 === p2 && /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(p1)) {
+                alert("Hoş geldiniz, " + activeRole);
+                window.location.href = "dashboard.html";
+            } else { alert("Hata: Kriterler sağlanamadı!"); }
+        }
+
+        const canvas = document.getElementById('bg-canvas'), ctx = canvas.getContext('2d');
+        let particles = [];
+        function init() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<100; i++) { particles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3, size: Math.random()*1.2 }); }
+        }
+        function draw() {
+            ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle = "rgba(212, 175, 55, 0.5)";
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x<0 || p.x>canvas.width) p.vx*=-1; if(p.y<0 || p.y>canvas.height) p.vy*=-1;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+            });
+            requestAnimationFrame(draw);
+        }
+        window.addEventListener('resize', init); init(); draw();
+    </script>
+</body>
+</html>

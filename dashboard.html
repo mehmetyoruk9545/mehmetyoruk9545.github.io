@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>FOR YOU | Stratejik Yönetim Merkezi</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Sizin Temel İlkeleriniz: Koyu Tema ve Altın Detaylar */
+        body { background: #050a14; color: white; margin: 0; overflow-y: auto; }
+        
+        /* 🏛️ ÜST ŞERİT (Değişmez İlke) */
+        .header { background: #000; height: 80px; display: flex; align-items: center; border-bottom: 2px solid #1e6091; padding: 0 40px; position: sticky; top: 0; z-index: 1000; }
+        .logo-box img { height: 50px; }
+        nav { margin-left: auto; display: flex; gap: 20px; }
+        nav a { color: #fff; text-decoration: none; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        nav a.active { color: #ffd000; }
+
+        /* 📊 YÖNETİM ALANI */
+        .dashboard-container { display: grid; grid-template-columns: 350px 1fr; gap: 30px; padding: 30px; max-width: 1700px; margin: 0 auto; }
+        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,212,0,0.1); border-radius: 20px; padding: 25px; backdrop-filter: blur(10px); }
+        
+        /* Yetki Rozeti */
+        .role-badge { background: #ffd000; color: #000; padding: 5px 15px; border-radius: 50px; font-weight: bold; font-size: 10px; margin-bottom: 20px; display: inline-block; }
+        
+        /* Tablo ve Formlar */
+        h3 { color: #ffd000; font-size: 13px; text-transform: uppercase; border-bottom: 1px solid rgba(255,208,0,0.2); padding-bottom: 10px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; }
+        .btn-gold { width: 100%; padding: 15px; background: linear-gradient(45deg, #d4af37, #f1d592); border: none; font-weight: bold; border-radius: 8px; cursor: pointer; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; color: #94a3b8; font-size: 11px; padding: 15px; border-bottom: 1px solid #334155; }
+        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+
+        /* 🟢 SOL ALT BUTON KULESİ (Değişmez İlke) */
+        .btn-tower { position: fixed; bottom: 30px; left: 30px; display: flex; flex-direction: column; gap: 10px; z-index: 4000; }
+        .btn-action { padding: 10px 20px; border-radius: 50px; font-weight: bold; text-decoration: none; font-size: 10px; text-align: center; min-width: 160px; border: 1px solid #ffd000; color: #ffd000; background: transparent; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-box"><img src="assets/images/logo.png" alt="FOR YOU" onerror="this.src='https://via.placeholder.com/150x50?text=FOR+YOU'"></div>
+        <nav>
+            <a href="index.html">Ana Sayfa</a>
+            <a href="about.html">Hakkımızda</a>
+            <a href="analiz.html">Analiz Başlat</a>
+            <a href="academy.html">Akademi</a>
+            <a href="dashboard.html" class="active">Yönetim Paneli</a>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="card">
+            <div id="roleDisplay" class="role-badge">YETKİ: YÜKLENİYOR...</div>
+            <h3>Veri Giriş Terminali</h3>
+            <input type="text" id="name" placeholder="Ad Soyad">
+            <select id="type">
+                <option>AİLE ÜYESİ (VIP)</option>
+                <option>STRATEJİK PERSONEL</option>
+                <option>MÜŞTERİ</option>
+            </select>
+            <input type="text" id="detail" placeholder="TC / İletişim / Not">
+            <button class="btn-gold" onclick="kaydet()">SİSTEME MÜHÜRLE</button>
+        </aside>
+
+        <main class="card">
+            <h3>Aktif Kayıtlar (Mevcut Kazanımlar)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>İSİM SOYİSİM</th>
+                        <th>KATEGORİ</th>
+                        <th>BİLGİ/TC</th>
+                        <th>İŞLEMLER</th>
+                    </tr>
+                </thead>
+                <tbody id="listBody">
+                    <tr>
+                        <td>Ayşe Betül Yörük</td>
+                        <td><span style="color:#ffd000">AİLE ÜYESİ (VIP)</span></td>
+                        <td>Mühürlü Kayıt</td>
+                        <td><button style="background:#1e6091; color:white; border:none; padding:5px 10px; border-radius:4px;">DÜZENLE</button></td>
+                    </tr>
+                    </tbody>
+            </table>
+        </main>
+    </div>
+
+    <div class="btn-tower">
+        <a href="index.html" class="btn-action">🏠 ANA SAYFAYA DÖN</a>
+        <a href="contact.html" class="btn-action" style="background:#22c55e; color:white; border:none;">🟢 CANLI DESTEK</a>
+    </div>
+
+    <script>
+        // Giriş yapanın rolünü yakala
+        window.onload = function() {
+            const role = sessionStorage.getItem('activeRole') || "Bilinmiyor";
+            document.getElementById('roleDisplay').innerText = "YETKİ: " + role;
+        };
+
+        function kaydet() {
+            const name = document.getElementById('name').value;
+            const type = document.getElementById('type').value;
+            const detail = document.getElementById('detail').value;
+            if(!name) return alert("İsim zorunludur.");
+
+            const row = document.getElementById('listBody').insertRow();
+            row.innerHTML = `<td>${name}</td><td>${type}</td><td>${detail}</td><td><button style="background:#1e6091; color:white; border:none; padding:5px 10px; border-radius:4px;">DÜZENLE</button></td>`;
+        }
+    </script>
+</body>
+</html>

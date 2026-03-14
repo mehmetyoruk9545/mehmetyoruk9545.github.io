@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>FOR YOU | Acil Durum</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="assets/css/main.css">
+<script defer src="assets/js/emergency.js"></script>
+<script defer src="assets/js/news.js"></script>
+<style>
+    /* ÜST YAPI VE RENK DOKUSU KORUMASI */
+    body { 
+        margin: 0; 
+        font-family: 'Segoe UI', Arial, sans-serif; 
+        background: linear-gradient(180deg, #050a14 0%, #0f172a 45%, #1e6091 100%) !important;
+        background-attachment: fixed !important;
+        color: #fff;
+    }
+
+    /* HEADER KORUMASI */
+    .header {
+        background: #000 !important;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        border-bottom: 2px solid #1e6091;
+        position: relative;
+        z-index: 2000;
+        padding: 0 40px;
+        justify-content: space-between;
+    }
+    .logo-box img { height: 50px; } 
+    nav { display: flex; gap: 20px; align-items: center; }
+    nav a { color: #fff !important; text-decoration: none; font-size: 13px; font-weight: 500; cursor: pointer; }
+    nav a.active { color: #ffd000 !important; }
+
+    /* ACİL DURUM KUTULARI - 5'Lİ YAN YANA DÜZENLEME */
+    .emergency-page-wrapper {
+        max-width: 1100px; /* Kutulara daha fazla alan açıldı */
+        margin: 40px auto;
+        padding: 0 20px;
+        padding-bottom: 120px;
+    }
+
+    .emergency-hero { text-align: center; padding: 40px 0; }
+    .emergency-hero h1 { font-size: 38px; color: #ffd000; }
+
+    .emergency-grid {
+        display: grid;
+        /* 5 kutuyu yan yana sığdırmak için kolon yapısı sabitlendi */
+        grid-template-columns: repeat(5, 1fr); 
+        gap: 12px; /* Kutular arası mesafe hafif daraltıldı */
+        margin: 40px 0;
+    }
+
+    .emergency-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 20px 10px; /* İç boşluk hafif azaltıldı */
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 20px; /* İkon boyutu optimize edildi */
+        min-width: 0; /* Sığmama durumunda taşmayı önler */
+    }
+    .emergency-card span { display: block; font-size: 12px; margin-top: 8px; font-weight: bold; }
+    .emergency-card:hover, .emergency-card.active { background: #ffd000; color: #000; transform: translateY(-3px); }
+    .emergency-card.vip { border: 2px solid #ffd000; background: rgba(255, 208, 0, 0.05); }
+
+    /* FORM VE ALT YAPI KORUMASI */
+    .emergency-form-box {
+        background: rgba(255, 255, 255, 0.98);
+        padding: 35px;
+        border-radius: 20px;
+        color: #0f172a;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+    label { display: block; font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase; margin-top: 15px; }
+    input, textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+    
+    button[type="submit"] {
+        width: 100%;
+        padding: 16px;
+        background: #c00;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-top: 25px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .ticker-fixed { position: fixed; bottom: 0; left: 0; width: 100%; background: #000;

@@ -1,0 +1,60 @@
+/* FOR YOU | STRATEJİK TASARIM MANİFESTOSU v3.2 */
+
+:root { 
+    --accent: #ffd000; 
+    --primary: #1e6091; 
+    --dark: #000; 
+    --panel: rgba(255, 255, 255, 0.03); 
+    --gold-gradient: linear-gradient(45deg, #d4af37, #f1d592); 
+}
+
+body, html { 
+    margin: 0; padding: 0; width: 100%; height: 100%; 
+    font-family: 'Segoe UI', sans-serif; 
+    background: #050a14; color: #fff; overflow: hidden; position: relative; 
+}
+
+/* ✨ Arka Plan Kanvas Ayarı */
+#bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.8; }
+
+.content-wrapper { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; }
+
+/* 🌍 Dil Çubuğu */
+.lang-bar { background: rgba(0,0,0,0.9); padding: 8px 40px; display: flex; justify-content: center; gap: 15px; font-size: 11px; border-bottom: 1px solid var(--primary); z-index: 3000; }
+.lang-bar span { cursor: pointer; opacity: 0.5; transition: 0.3s; font-weight: bold; }
+.lang-bar span.active { opacity: 1; color: var(--accent); }
+
+/* 🏛️ Üst Menü */
+.header { background: var(--dark); height: 80px; display: flex; align-items: center; border-bottom: 2px solid var(--primary); padding: 0 40px; }
+.logo-box img { height: 50px; }
+nav { margin-left: auto; display: flex; gap: 20px; align-items: center; }
+nav a { color: #fff; text-decoration: none; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+nav a.active { color: var(--accent); }
+.btn-emergency { background: #c00; padding: 10px 18px; border-radius: 6px; font-weight: bold; color: white !important; }
+
+/* 📊 Ana Yerleşim */
+.main-layout { display: grid; grid-template-columns: 340px 1fr 320px; gap: 25px; max-width: 1750px; margin: 15px auto; padding: 0 20px; flex-grow: 1; overflow: hidden; }
+.side-box { background: var(--panel); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); padding: 15px; display: flex; flex-direction: column; overflow: hidden; }
+.side-box h3 { color: var(--accent); border-bottom: 1px solid var(--accent); padding-bottom: 8px; font-size: 12px; margin-top: 0; }
+
+/* 🖊️ Giriş ve Listeler */
+.search-input { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 8px; border-radius: 5px; color: #fff; font-size: 10px; margin-bottom: 10px; width: 93%; outline: none; }
+.scroll-area { overflow-y: auto; flex-grow: 1; }
+.list-link { display: block; color: #cbd5e1; text-decoration: none; padding: 8px 0; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+
+/* 🚀 Hero Bölümü */
+.hero-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.hero-title { font-size: 38px; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
+.hero-subtitle { font-size: 14px; color: #94a3b8; max-width: 650px; margin: 20px auto; line-height: 1.7; font-style: italic; }
+
+/* 💰 Finans Kartları */
+.fin-item { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 10px; border-left: 3px solid var(--accent); }
+
+/* 🟢 Buton Kulesi (Sizin En Sevdiğiniz Alan) */
+.btn-tower { position: fixed; bottom: 75px; left: 30px; display: flex; flex-direction: column; gap: 10px; z-index: 4000; }
+.btn-action { padding: 10px 20px; border-radius: 50px; font-weight: bold; text-decoration: none; font-size: 10px; text-align: center; transition: 0.3s; min-width: 170px; cursor: pointer; }
+.btn-partner-trigger { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+.btn-staff-login { background: #000; border: 1px solid var(--accent); color: var(--accent); }
+
+/* 🧠 AI FAB */
+.ai-fab { position: fixed; bottom: 75px; right: 30px; background: var(--accent); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 4000; font-size: 11px; }

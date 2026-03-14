@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Çalışma Modelimiz | ANCORA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="assets/css/main.css">
+<script defer src="assets/js/panel.js"></script>
+<script defer src="assets/js/news.js"></script>
+<style>
+    /* ANA YAPI KORUMASI */
+    body { 
+        margin: 0; 
+        font-family: 'Segoe UI', Arial, sans-serif; 
+        background: linear-gradient(180deg, #050a14 0%, #0f172a 45%, #1e6091 100%) !important;
+        background-attachment: fixed !important;
+        color: #fff;
+        overflow-x: hidden; /* Sağ kaymayı engeller */
+    }
+
+    /* ÜST ŞERİT - SABİT */
+    .header {
+        background: #000 !important;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        border-bottom: 2px solid #1e6091;
+    }
+    .header-inner {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+    }
+    .logo { height: 50px; } 
+    nav a { color: #fff !important; text-decoration: none; margin-left: 12px; font-size: 12px; font-weight: 500; }
+
+    /* HİZMET KARTLARI - EKRANA SIĞDIRMA OPTİMİZASYONU */
+    .services-hero { text-align: center; padding: 40px 20px; }
+    .services-hero h1 { font-size: 34px; color: #ffd000; margin-bottom: 10px; }
+    .services-hero p { max-width: 800px; margin: 0 auto; font-size: 15px; color: #cbd5e1; }
+
+    .services-container {
+        display: flex; /* Grid yerine Flex kullanarak esneklik sağladık */
+        justify-content: center;
+        gap: 10px; /* Kutular arası boşluk sığması için daraltıldı */
+        max-width: 1250px;
+        margin: 30px auto;
+        padding: 0 10px;
+    }
+
+    .service-card {
+        flex: 1; /* Tüm kartlar eşit genişlikte esner */
+        background: rgba(255, 255, 255, 0.96);
+        padding: 20px 12px;
+        border-radius: 12px;
+        color: #0f172a;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        min-width: 180px; /* Kartların çok fazla ezilmesini önler */
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .card-level { font-size: 9px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
+    .service-card h3 { color: #1e6091; margin: 0 0 12px 0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
+    .service-card ul { padding-left: 15px; font-size: 12px; line-height: 1.4; margin: 0; flex-grow: 1; list-style-type: square; }
+    .service-card ul li { margin-bottom: 6px; }
+    .card-footer { font-size: 10px; font-style: italic; color: #64748b; margin-top: 12px; border-top: 1px solid #f1f5f9; padding-top: 8px; }
+
+    .service-card.dark { background: #0f172a; color: #fff; border: 1px solid #ffd000; }
+    .service-card.dark h3 { color: #ffd000; border-bottom-color: rgba(255,255,255,0.1); }
+    .service-card.dark ul { color: #e2e8f0; }
+
+    .selection-notice { text-align: center; padding: 30px 20px; margin-bottom: 80px; }
+    .btn-primary { 
+        display: inline-block; 
+        padding: 12px 28px; 
+        background: #ffd000; 
+        color: #000; 
+        text-decoration: none; 
+        border-radius: 8px; 
+        font-weight: bold; 
+        font-size: 13px;
+    }
+
+    .ticker-fixed { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; color: #fff; padding: 10px 0; border-top: 2px solid #1e6091; font-size: 12px; text-align: center; z-index: 2500; }
+    .yetkili-kapisi { position: fixed; bottom: 85px; right: 20px; background: #000; border: 1px solid #ffd000; padding: 10px 15px; border-radius: 30px; color: #ffd000; text-decoration: none; font-size: 11px; font-weight: bold; z-index: 3000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html"><img src="assets/images/logo.png" class="logo" alt="ANCORA"></a>
+    <nav>
+      <a href="index.html">Ana Sayfa</a>
+      <a href="about.html">Hakkımızda</a>
+      <a href="analiz.html" style="color: #ffd000; font-weight: bold;">Analiz Başlat</a>
+      <a href="services.html" class="active">Çalışma Modelimiz</a>
+      <a href="academy.html">ANCORA Akademi</a>
+      <a href="contact.html">İletişim</a>
+      <a href="emergency.html" class="alert" style="background:#c00; padding:5px 10px; border-radius:5px; color:#fff !important;">Acil Durum</a>
+    </nav>
+  </div>
+</header>
+
+<div class="services-hero">
+    <h1>Hizmet Değil, Stratejik Refakat.</h1>
+    <p>ANCORA, sorumluluk derinliğine göre yapılandırılmış seviyelerde çalışır.</p>
+</div>
+
+<div class="services-container">
+    <div class="service-card">
+        <div class="card-level">Seviye 01</div>
+        <h3>CORE</h3>
+        <ul><li>İlk Analiz ve Teşhis</li><li>Risk Haritası Oluşturma</li><li>Genel Yönlendirme</li></ul>
+        <p class="card-footer">Temel çerçeve için.</p>
+    </div>
+
+    <div class="service-card">
+        <div class="card-level">Seviye 02</div>
+        <h3>PRO</h3>
+        <ul><li>Aktif Süreç Denetimi</li><li>Doküman Analizi</li><li>Partner Eşleştirmesi</li></ul>
+        <p class="card-footer">Yönetim ve yapı için.</p>
+    </div>
+
+    <div class="service-card">
+        <div class="card-level">Seviye 03</div>
+        <h3>CORPORATE</h3>
+        <ul><li>Süreç Tasarımı</li><li>Periyodik Denetim</li><li>Stratejik Raporlama</li></ul>
+        <p class="card-footer">Kurumsal güvence için.</p>
+    </div>
+
+    <div class="service-card">
+        <div class="card-level">Seviye 04</div>
+        <h3>PREMIER</h3>
+        <ul><li>Yüksek Öncelikli Erişim</li><li>Kriz Anı Takibi</li><li>Hızlı Müdahale</li></ul>
+        <p class="card-footer">Kritik eşikler için.</p>
+    </div>
+
+    <div class="service-card dark">
+        <div class="card-level">Seviye 05</div>
+        <h3>SIGNATURE</h3>
+        <ul><li>Stratejik Karargâh</li><li>Proaktif Öngörü</li><li>Tam Yetkili Refakat</li></ul>
+        <p class="card-footer">Gelecek kontrolü için.</p>
+    </div>
+</div>
+
+<div class="selection-notice">
+    <a href="contact.html" class="btn-primary">Ön Değerlendirme Talep Et</a>
+</div>
+
+<div class="ticker-fixed">
+  <span id="news-text">"Sizin unuttuklarınız, bizim emanetimizdir."</span>
+</div>
+
+<a href="login.html" class="yetkili-kapisi">🛡️ YETKİLİ GİRİŞİ</a>
+
+</body>
+</html>
